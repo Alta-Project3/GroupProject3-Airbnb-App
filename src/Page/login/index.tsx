@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../../Components/Layout'
 import { Link } from 'react-router-dom'
+import Input from '../../Components/Input'
 
 const Login = () => {
   return (
