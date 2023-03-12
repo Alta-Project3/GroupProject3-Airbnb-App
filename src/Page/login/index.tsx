@@ -1,11 +1,13 @@
 import React from 'react'
+import Layout from '../../Components/Layout'
 
 const Login = () => {
   return (
-    <>
-      <div className='font-semibold'><h1>AirBnB Apps</h1></div>
+    <Layout>
+      <div className='font-semibold'><h1>AltaBnB Apps</h1></div>
 
-    </>
+
+    </Layout>
 
 
   )
