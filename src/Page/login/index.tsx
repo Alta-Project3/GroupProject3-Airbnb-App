@@ -2,7 +2,12 @@ import React from 'react'
 
 const Login = () => {
   return (
-    <div>Login</div>
+    <>
+      <div className='font-semibold'><h1>AirBnB Apps</h1></div>
+
+    </>
+
+
   )
 }
 
