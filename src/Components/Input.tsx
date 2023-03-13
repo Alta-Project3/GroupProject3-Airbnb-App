@@ -19,11 +19,11 @@ const Input: React.FC<InputProps> = ({
 }) => {
     return (
         <div className="mb-1">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor={name}>
+            <label className="block font-light mb-2" htmlFor={name}>
                 {label}
             </label>
             <input
-                className="input input-sm input-bordered w-full max-w-xs"
+                className="input input-primary bg-primary w-full max-w-xs"
                 id={name}
                 type={type}
                 name={name}
