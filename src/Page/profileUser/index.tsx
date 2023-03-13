@@ -1,9 +1,4 @@
-import React,{useState} from 'react'
-
-
-
-
-
+import React, { useState } from 'react'
 import Layout from '../../Components/Layout'
 import Navbar from '../../Components/Navbar'
 import Button from '../../Components/Button'
@@ -17,11 +12,11 @@ const ProfileUSer = () => {
 
     return (
         <Layout>
-        <Navbar/>
-        <div className="text-white mx-10 mt-10 w-screen">
-                    <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
-                    <div className="grid grid-cols-2">
 
+            <Navbar />
+            <div className="text-white mt-10 w-9/12">
+                <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
+                <div className="grid grid-cols-2">
                     <div className="flex flex-col mt-10 space-y-3 w-60">
                         <div>
                             <label htmlFor="name" className='text-l font-semibold'>
@@ -46,44 +41,45 @@ const ProfileUSer = () => {
                                 Address
                             </label>
                             <p className='text-slate-300 text-l'>
-                            4140 Parker Rd. Allentown, New Mexico 31134
+                                4140 Parker Rd. Allentown, New Mexico 31134
                             </p>
-                        </div>                    
+                        </div>
                     </div>
                     <div className="flex w-20 ml-10 space-x-2 mt-8">
                         <Button
-                        color='accent'
-                        size='btn-sm text-xl'
-                        children={<FaPenSquare/>}
+                            color='accent'
+                            size='btn-sm text-xl'
+                            children={<FaPenSquare />}
                         />
                         <Button
-                        color='white'
-                        size='btn-sm text-xl'
-                        children={<FaRoad/>}
+                            color='white'
+                            size='btn-sm text-xl'
+                            children={<FaRoad />}
                         />
-                    </div> 
                     </div>
-                    <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
-                        <Button
+                </div>
+                <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
+                    <Button
                         color='accent'
                         size='w-full'
                         children={' Make your home Bnb ? '}
                         onClick={() => setShowModal(true)}
-                        />
-                    </div>
-                    <div className="flex w-5/6 justify-between mt-40">
-                        <Button
+                    />
+                </div>
+                <div className="flex w-5/6 justify-between mt-40">
+                    <Button
                         color='warning text-white'
                         children={'Delete Account'}
-                        />
-                    </div> 
+                    />
                 </div>
-                <Modal
+            </div>
+            <Modal
                 isOpen={showModal}
-                isClose={()=> setShowModal(false)}
-                >
-                
-                </Modal>
+                isClose={() => setShowModal(false)}
+            >
+
+            </Modal>
+
         </Layout>
     )
 }

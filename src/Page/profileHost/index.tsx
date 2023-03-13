@@ -19,7 +19,7 @@ const ProfileHost = () => {
     return (
         <Layout>
             <Navbar/>
-            <div className="text-white mx-10 mt-10 w-screen">
+            <div className="text-white mt-10 w-9/12">
                 <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
                 <div className="grid grid-cols-2">
 
