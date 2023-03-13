@@ -12,7 +12,6 @@ const ProfileUSer = () => {
 
     return (
         <Layout>
-
             <Navbar />
             <div className="text-white mt-10 w-9/12">
                 <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
@@ -47,12 +46,12 @@ const ProfileUSer = () => {
                     </div>
                     <div className="flex w-20 ml-10 space-x-2 mt-8">
                         <Button
-                            color='accent'
+                            color='btn-accent'
                             size='btn-sm text-xl'
                             children={<FaPenSquare />}
                         />
                         <Button
-                            color='white'
+                            color='btn-white'
                             size='btn-sm text-xl'
                             children={<FaRoad />}
                         />
@@ -60,7 +59,7 @@ const ProfileUSer = () => {
                 </div>
                 <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
                     <Button
-                        color='accent'
+                        color='btn-accent'
                         size='w-full'
                         children={' Make your home Bnb ? '}
                         onClick={() => setShowModal(true)}
@@ -68,7 +67,7 @@ const ProfileUSer = () => {
                 </div>
                 <div className="flex w-5/6 justify-between mt-40">
                     <Button
-                        color='warning text-white'
+                        color='btn-warning text-white'
                         children={'Delete Account'}
                     />
                 </div>
@@ -76,8 +75,24 @@ const ProfileUSer = () => {
             <Modal
                 isOpen={showModal}
                 isClose={() => setShowModal(false)}
+                size='w-80'
             >
-
+                <div className="flex flex-col justify-center">
+                    <h1 className='text-2xl text-center'>Are You Sure To Make Your Home bnb?</h1>
+                    <div className="flex flex-row justify-center space-x-4">
+                        <Button
+                        color="btn-warning"
+                        size='mt-5'
+                        children={"Cancel"}
+                        />
+                        <Button
+                        color="btn-accent"
+                        size='mt-5'
+                        children={"Yes, I Sure"}
+                        />
+                    </div>
+                    
+                </div>
             </Modal>
 
         </Layout>
