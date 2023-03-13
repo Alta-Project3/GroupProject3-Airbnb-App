@@ -29,7 +29,7 @@ function App() {
           <Route path='/profile_user' element={<ProfileUSer/>} />
           <Route path='/profile_host' element={<ProfileHost/>} />
           <Route path='/edit_profile' element={<EditProfile/>} />
-          <Route path='/detail_stay' element={<DetailStay/>} />
+          <Route path='/stays/:stayId' element={<DetailStay/>} />
           <Route path='/payment' element={<Payment/>} />
           <Route path='/set_bnb' element={<SetBnb/>} />
           <Route path='/edit_bnb' element={<EditBnb/>} />
