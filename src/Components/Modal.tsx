@@ -5,23 +5,25 @@ import {HiOutlineXMark} from 'react-icons/hi2'
 type ModalProps = {
     isOpen: boolean;
     isClose: React.MouseEventHandler;
-    title: string;
+    title?: string;
     children?: React.ReactNode;
+    size?: string
+    titleStyle?: string
 };
 
-const Modal: React.FC<ModalProps> = ({ isOpen, isClose, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, isClose, title, children, size, titleStyle }) => {
     return (
         <div
         className={`${
             isOpen ? "fixed" : "hidden"
         } inset-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50`}
         >
-        <div className="bg-primary w-full h-full rounded-lg p-6">
+        <div className={`bg-primary ${size} rounded-lg p-6`}>
             <a onClick={isClose} className="text-white text-4xl hover:text-black"> 
                 <HiOutlineXMark/>
             </a>
             <div className="flex justify-center items-center mb-4">
-            <h1 className="text-2xl text-alta-space-cadet font-semibold">
+            <h1 className={`text-2xl font-semibold ${titleStyle}`}>
                 {title}
             </h1>
             </div>

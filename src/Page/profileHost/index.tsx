@@ -1,11 +1,19 @@
 import React, {useState} from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useCookies } from "react-cookie";
+
+// Component
 import Layout from '../../Components/Layout'
 import Navbar from '../../Components/Navbar'
-import Modal from '../../Components/Modal'
 import Button from '../../Components/Button'
+import Modal from '../../Components/Modal'
+import { FaPenSquare } from 'react-icons/fa'
+import { FaRoad } from 'react-icons/fa'
 
 const ProfileHost = () => {
     
+    const navigate = useNavigate()
+    const location = useLocation()
     const [showModal, setShowModal] = useState(false)
 
     return (
@@ -13,6 +21,8 @@ const ProfileHost = () => {
             <Navbar/>
             <div className="text-white mx-10 mt-10 w-screen">
                 <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
+                <div className="grid grid-cols-2">
+
                 <div className="flex flex-col mt-10 space-y-3 w-60">
                     <div>
                         <label htmlFor="name" className='text-l font-semibold'>
@@ -41,24 +51,44 @@ const ProfileHost = () => {
                         </p>
                     </div>                    
                 </div>
-                <div className="flex w-5/6 justify-between mt-8">
-                    <button className="btn btn-accent text-primary font-bold">Edit Profile</button>
-                    <button className="btn btn-white text-primary font-bold">Your Trip</button>
+                <div className="flex w-20 ml-10 space-x-2 mt-8">
+                    <Button
+                    color='accent'
+                    size='btn-sm text-xl'
+                    children={<FaPenSquare/>}
+                    />
+                    <Button
+                    color='white'
+                    size='btn-sm text-xl'
+                    children={<FaRoad/>}
+                    />
                 </div> 
+                </div>
                 <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
-                    <button className="btn btn-accent text-primary font-bold w-full">View Your List Bnb</button>
-                    <button className="btn btn-accent text-primary font-bold w-full"
-                    onClick={()=> setShowModal(true)}
-                    >Create New bnb</button>
+                    <Button
+                    color='accent'
+                    size='w-full'
+                    children={'View Your List Bnb'}
+                    />
+                    <Button
+                    color='accent'
+                    size='w-full'
+                    children={'Create New Bnb'}
+                    onClick={() => setShowModal(true)}
+                    />
                 </div>
                 <div className="flex w-5/6 justify-between mt-40">
-                    <button className="btn btn-warning text-primary font-bold text-white">Delete Account</button>
+                    <Button
+                    color='warning text-white'
+                    children={'Delete Account'}
+                    />
                 </div> 
             </div>
             <Modal
             title='Set Your bnb'
             children={"test"}
             isOpen={showModal}
+            size='w-full h-full'
             isClose={()=> setShowModal(false)}
             />
         </Layout> 
