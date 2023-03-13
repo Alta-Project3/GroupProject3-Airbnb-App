@@ -12,11 +12,11 @@ const ProfileUSer = () => {
 
     return (
         <Layout>
+
             <Navbar />
             <div className="text-white mt-10 w-9/12">
                 <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
                 <div className="grid grid-cols-2">
-
                     <div className="flex flex-col mt-10 space-y-3 w-60">
                         <div>
                             <label htmlFor="name" className='text-l font-semibold'>
@@ -79,6 +79,7 @@ const ProfileUSer = () => {
             >
 
             </Modal>
+
         </Layout>
     )
 }
