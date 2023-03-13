@@ -53,12 +53,12 @@ const ProfileHost = () => {
                 </div>
                 <div className="flex w-20 ml-10 space-x-2 mt-8">
                     <Button
-                    color='accent'
+                    color='btn-accent'
                     size='btn-sm text-xl'
                     children={<FaPenSquare/>}
                     />
                     <Button
-                    color='white'
+                    color='btn-white'
                     size='btn-sm text-xl'
                     children={<FaRoad/>}
                     />
@@ -66,20 +66,20 @@ const ProfileHost = () => {
                 </div>
                 <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
                     <Button
-                    color='accent'
+                    color='btn-accent'
                     size='w-full'
                     children={'View Your List Bnb'}
                     />
                     <Button
-                    color='accent'
+                    color='btn-accent'
                     size='w-full'
                     children={'Create New Bnb'}
                     onClick={() => setShowModal(true)}
                     />
                 </div>
-                <div className="flex w-5/6 justify-between mt-40">
+                <div className="flex w-5/6 mt-20 mb-10">
                     <Button
-                    color='warning text-white'
+                    color='btn-warning'
                     children={'Delete Account'}
                     />
                 </div> 
