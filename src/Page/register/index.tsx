@@ -38,7 +38,7 @@ const Register = () => {
     <Layout>
       <div className='flex flex-col h-screen justify-between w-9/12'>
         <div className='mt-10'></div>
-        <form className='flex flex-col' action="">
+        <form onSubmit={handleSubmit} className='flex flex-col' action="">
           <h1 className="text-center font-semibold text-4xl">Sign Up</h1>
           <Input
             type='text'
