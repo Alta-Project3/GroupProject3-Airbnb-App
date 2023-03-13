@@ -11,7 +11,7 @@ const Home = () => {
 
       </Navbar>
 
-      <div className='flex flex-col my-4 gap-4 w-full items-center'>
+      <div className='flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4'>
         {stays.map((stay: any) => {
           return (
             <ListingCards
