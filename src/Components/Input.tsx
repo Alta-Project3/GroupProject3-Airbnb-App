@@ -5,8 +5,9 @@ interface InputProps {
     name: string;
     type?: string;
     value: string;
-    placeholder: string
+    placeholder: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
+    classes?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -15,7 +16,8 @@ const Input: React.FC<InputProps> = ({
     type,
     value,
     onChange,
-    placeholder
+    placeholder,
+    classes
 }) => {
     return (
         <div className="mb-1">
@@ -23,7 +25,8 @@ const Input: React.FC<InputProps> = ({
                 {label}
             </label>
             <input
-                className="input input-primary bg-primary w-full max-w-xs"
+                className={`${classes || 'input input-primary'} 
+                bg-primary w-full max-w-xs`}
                 id={name}
                 type={type}
                 name={name}
