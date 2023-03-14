@@ -97,22 +97,6 @@ const Home = () => {
             decimalsLimit={2}
             onValueChange={(value, name) => setFormValues({ ...formValues, maxprice: value ? parseInt(value) : 0 })}
           />
-          {/* <Input
-            label='Minimum Price'
-            name='minprice'
-            type='Number'
-            placeholder='Set minimum price'
-            value={formValues.minprice}
-            onChange={handleInputChange}
-          /> */}
-          {/* <Input
-            label='Maximum Price'
-            name='maxprice'
-            type='Number'
-            placeholder='Set maximum price'
-            value={formValues.maxprice}
-            onChange={handleInputChange}
-          /> */}
           <label htmlFor="daterange">
             Date Range
           </label>
