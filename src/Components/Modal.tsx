@@ -18,8 +18,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, isClose, title, children, size, t
             isOpen ? "fixed" : "hidden"
         } inset-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50`}
         >
-        <div className={`bg-base-100 ${size} rounded-lg p-6 overflow-auto`}>
-            <a onClick={isClose} className="text-white text-4xl hover:text-accent cursor-pointer"> 
+        <div className={`bg-base-100 ${size} rounded-lg p-6 overflow-auto relative`}>
+            <a onClick={isClose} className="text-white absolute right-3 top-1 text-4xl hover:text-accent cursor-pointer"> 
                 <HiOutlineXMark/>
             </a>
             <div className="flex justify-center items-center mb-4">
