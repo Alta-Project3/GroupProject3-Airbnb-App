@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import Layout from '../../Components/Layout'
 import { Link } from 'react-router-dom'
 import Input from '../../Components/Input'
+import axios from 'axios'
+import { useCookies } from 'react-cookie'
+import Swal from "sweetalert2";
 
 interface FormValues {
   email: string;
@@ -14,15 +17,65 @@ const initialFormValues: FormValues = {
 };
 
 const Login = () => {
+  // Forms
   const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Login
+  const [cookies, setCookie] = useCookies(['session']);
+
+  const login = (email: string, password: string): Promise<any> => {
+    return axios.post('https://baggioshop.site/login', { email, password })
+      .then(response => console.log(response.data.token))
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormValues(initialFormValues);
+
+    try {
+      const response = await axios.post(
+        'https://baggioshop.site/login',
+        {
+          email: formValues.email,
+          password: formValues.password
+        }
+      );
+      const { data } = response.data;
+      console.log(data);
+      if (data) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          text: "Signed successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setCookie('session', data.role, { path: "/" });
+        setCookie('session', data.token, { path: "/" });
+        // dispatch(login(data));
+      }
+    } catch (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Email or Password incorrect",
+        showConfirmButton: true,
+      });
+      console.log(error);
+    }
+  }
+
+
+  const handleLoginSuccess = (response: any) => {
+    console.log(response)
+    // setCookie('session', response.token, { path: '/' });
   };
 
   return (
@@ -49,7 +102,7 @@ const Login = () => {
             placeholder='enter your password'
             onChange={handleInputChange}
           />
-          <button type='submit' className='self-center btn btn-accent w-1/2 my-2'>Sign In</button>
+          <button type='submit' onClick={() => console.log(formValues.email, formValues.password)} className='self-center btn btn-accent w-1/2 my-2'>Sign In</button>
           {/* <button type='submit' className='self-center btn btn-accent w-1/2 my-2'><Link to={"/home"}>Sign In</Link></button> */}
 
           <h3 className='text-l text-center mt-2'>Not on AltaBnb yet? <Link to={"/register"} className='underline hover:text-accent'>Sign Up</Link> </h3>

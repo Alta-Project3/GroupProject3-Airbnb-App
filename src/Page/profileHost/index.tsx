@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useCookies } from "react-cookie";
 import axios from 'axios';
@@ -29,10 +29,10 @@ const ProfileHost = () => {
 
     const fetchTableData = async () => {
         try {
-            const response = await axios.get(`https://baggioshop.site/users`,{
-                headers:{
-                    Accept : 'application/json',
-                    Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Nzg5NTMxNjAsInVzZXJJRCI6MX0.e48mDj4O-vZyFHA3XQ0MQYPhvWPG6PBziEawlEJh5ng'
+            const response = await axios.get(`https://baggioshop.site/users`, {
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Nzg5NTMxNjAsInVzZXJJRCI6MX0.e48mDj4O-vZyFHA3XQ0MQYPhvWPG6PBziEawlEJh5ng'
                 }
             });
             console.log("datatest: ", response.data);
@@ -46,11 +46,11 @@ const ProfileHost = () => {
 
     useEffect(() => {
         fetchTableData();
-    }, [`https://baggioshop.site/`]); 
+    }, [`https://baggioshop.site/`]);
 
-useEffect(()=>{
-    
-},[])
+    useEffect(() => {
+
+    }, [])
 
     const initialListingFormValues: ListingFormValues = {
         name: "",
@@ -60,6 +60,29 @@ useEffect(()=>{
         description: "",
         price: ""
     };
+
+    const handleNewListing = (formValues: ListingFormValues) => {
+        console.log(formValues)
+        // setLoading(true);
+        // axios
+        //     .post(endpoint,
+        //         {
+        //             full_name: formValues.full_name,
+        //             email: formValues.email,
+        //             password: formValues.password,
+        //             team: formValues.team,
+        //             role: formValues.role,
+        //             status: formValues.status
+        //         },
+        //         { headers: { Authorization: `Bearer ${cookies.userToken}` } }
+        //     )
+        //     .then(result => {
+        //         console.log("Form submitted with values: ", result)
+        //         fetchTableData();
+        //     })
+        //     .catch(error => console.log(error))
+        //     .finally(() => setLoading(false));
+    }
 
     return (
         <Layout>
@@ -140,54 +163,10 @@ useEffect(()=>{
                 isClose={() => setShowBnb(false)}
             >
                 <ListingModal
+                    onSubmit={handleNewListing}
                     initialFormValues={initialListingFormValues}
+                    editMode={false}
                 />
-                {/* <div className="flex justify-center">
-                    <form className='flex flex-col w-60 sm:w-80'>
-                        <Input
-                            type='text'
-                            label='Name'
-                            name='name'
-                            placeholder='set room name'
-                        />
-                        <TextArea
-                            label='Address'
-                            name='address'
-                            placeholder='enter home address'
-                        />
-                        <TextArea
-                            label='Description'
-                            name='description'
-                            placeholder='enter your home descrption'
-                        />
-                        <Input
-                            type='number'
-                            label='Price'
-                            name='price'
-                            placeholder='Rp.250.000.00 /nigth'
-                        />
-
-                        <div className="flex flex-col justify-center w-full mt-2">
-                            <label htmlFor="">
-                                Your Home Photos
-                            </label>
-                            <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-30  rounded-lg cursor-pointer bg-primary dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <FaCloudUploadAlt className='text-6xl text-gray-400'/>
-                                    <p className="mb-2 text-sm text-gray-400 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p className="text-xs text-gray-400 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                </div>
-                                <input id='dropzone-file' type="file" className="hidden" />
-                            </label>
-                        </div> 
-
-                        <Button
-                        color="btn-accent"
-                        size='mt-5'
-                        children={"Save"}
-                        />
-                    </form>
-                </div> */}
             </Modal>
 
             <Modal
