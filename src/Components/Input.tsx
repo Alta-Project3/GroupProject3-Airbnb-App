@@ -17,7 +17,7 @@ const Input: React.FC<InputProps> = ({
     value,
     onChange,
     placeholder,
-    classes
+    classes,
 }) => {
     return (
         <div className="mb-1">
