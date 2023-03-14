@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, {useState, useEffect} from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useCookies } from "react-cookie";
+import axios from 'axios';
 
 // Component
 import Layout from '../../Components/Layout'
@@ -23,6 +24,33 @@ const ProfileHost = () => {
     const [showBnb, setShowBnb] = useState(false)
     const [showDelete, setShowDelete] = useState(false)
     const [showEdit, setShowEdit] = useState(false)
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    const fetchTableData = async () => {
+        try {
+            const response = await axios.get(`https://baggioshop.site/users`,{
+                headers:{
+                    Accept : 'application/json',
+                    Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Nzg5NTMxNjAsInVzZXJJRCI6MX0.e48mDj4O-vZyFHA3XQ0MQYPhvWPG6PBziEawlEJh5ng'
+                }
+            });
+            console.log("datatest: ", response.data.data.data);
+            setData(response.data.data.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTableData();
+    }, [`https://baggioshop.site/`]); 
+
+useEffect(()=>{
+    
+},[])
 
     const initialListingFormValues: ListingFormValues = {
         name: "",
