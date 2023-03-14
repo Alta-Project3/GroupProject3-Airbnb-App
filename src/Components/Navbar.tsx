@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({name, handleProfile, children}) => {
             <div className="flex-none space-x-5">
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="">
-                    <img src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaXaKH9Q7gVGHSc2_IK3mOhpEaiULsMGxwRUe2nL4b&s`} className='rounded-full w-12 h-12' alt="" />
+                    <img src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaXaKH9Q7gVGHSc2_IK3mOhpEaiULsMGxwRUe2nL4b&s`} className='rounded-full w-12 h-12 sm:h-8 sm:w-8' alt="" />
                     </label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
                         <li onClick={() => navigate('/profile_host')}><a>

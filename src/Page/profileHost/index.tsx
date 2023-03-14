@@ -27,82 +27,82 @@ const ProfileHost = () => {
         <Layout>
             <Navbar/>
             <div className="text-white mt-10 w-9/12">
-                <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
+                <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-2xl'>Personal Information</h1>
                 <div className="grid grid-cols-2">
 
-                <div className="flex flex-col mt-10 space-y-3 w-60">
-                    <div>
-                        <label htmlFor="name" className='text-l font-semibold'>
-                            Name
-                        </label>
-                        <p className='text-slate-300 text-l'>Marvin Mckiney</p>
+                    <div className="flex flex-col mt-10 space-y-3 w-60 sm:w-96">
+                        <div>
+                            <label htmlFor="name" className='text-l font-semibold sm:text-sm'>
+                                Name
+                            </label>
+                            <p className='text-slate-300 text-l sm:text-sm'>Marvin Mckiney</p>
+                        </div>
+                        <div>
+                            <label htmlFor="email" className='text-l font-semibold sm:text-sm'>
+                                Email
+                            </label>
+                            <p className='text-slate-300 text-l italic sm:text-sm'>Marvin@gmail.com</p>
+                        </div>
+                        <div>
+                            <label htmlFor="phone_number" className='text-l font-semibold sm:text-sm'>
+                                Phone Number
+                            </label>
+                            <p className='text-slate-300 text-l sm:text-sm'>08923674327</p>
+                        </div>
+                        <div>
+                            <label htmlFor="address" className='text-l font-semibold sm:text-sm'>
+                                Address
+                            </label>
+                            <p className='text-slate-300 text-l sm:text-sm'>
+                            4140 Parker Rd. Allentown, New Mexico 31134
+                            </p>
+                        </div>                    
                     </div>
-                    <div>
-                        <label htmlFor="email" className='text-l font-semibold'>
-                            Email
-                        </label>
-                        <p className='text-slate-300 text-l italic'>Marvin@gmail.com</p>
+                    <div className="flex w-20 ml-10 space-x-2 mt-8 sm:ml-32 md:ml-40">
+                        <Button
+                        color='btn-accent'
+                        size='btn-sm text-xl'
+                        children={<FaPenSquare/>}
+                        onClick={()=> setShowEdit(true)}
+                        />
+                        <Button
+                        color='btn-white'
+                        size='btn-sm sm:text-primary text-xl'
+                        children={<FaRoad/>}
+                        onClick={()=> navigate('/trip')}
+                        />
+                    </div> 
                     </div>
-                    <div>
-                        <label htmlFor="phone_number" className='text-l font-semibold'>
-                            Phone Number
-                        </label>
-                        <p className='text-slate-300 text-l'>08923674327</p>
+                    <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
+                        <Button
+                        color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
+                        size='sm:w-60 sm:btn-sm'
+                        children={'View Your List Bnb'}
+                        onClick={()=> navigate('/list_bnb')}
+                        />
+                        <Button
+                        color='btn-accent'
+                        size='sm:w-60 sm:btn-sm sm:text-xs'
+                        children={'Create New Bnb'}
+                        onClick={() => setShowBnb(true)}
+                        />
                     </div>
-                    <div>
-                        <label htmlFor="address" className='text-l font-semibold'>
-                            Address
-                        </label>
-                        <p className='text-slate-300 text-l'>
-                        4140 Parker Rd. Allentown, New Mexico 31134
-                        </p>
-                    </div>                    
-                </div>
-                <div className="flex w-20 ml-10 space-x-2 mt-8">
-                    <Button
-                    color='btn-accent'
-                    size='btn-sm text-xl'
-                    children={<FaPenSquare/>}
-                    onClick={()=> setShowEdit(true)}
-                    />
-                    <Button
-                    color='btn-white'
-                    size='btn-sm text-xl'
-                    children={<FaRoad/>}
-                    onClick={()=> navigate('/trip')}
-                    />
-                </div> 
-                </div>
-                <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
-                    <Button
-                    color='btn-accent'
-                    size='w-full'
-                    children={'View Your List Bnb'}
-                    onClick={()=> navigate('/list_bnb')}
-                    />
-                    <Button
-                    color='btn-accent'
-                    size='w-full'
-                    children={'Create New Bnb'}
-                    onClick={() => setShowBnb(true)}
-                    />
-                </div>
-                <div className="flex w-5/6 mt-20 mb-10">
-                    <Button
-                    color='btn-warning'
-                    children={'Delete Account'}
-                    onClick={() => setShowDelete(true)}
-                    />
-                </div> 
+                    <div className="flex w-5/6 mt-20 mb-10">
+                        <Button
+                        color='btn-warning sm:btn-sm sm:text-xs'
+                        children={'Delete Account'}
+                        onClick={() => setShowDelete(true)}
+                        />
+                    </div> 
             </div>
             <Modal
             title='Set Your bnb'
             isOpen={showBnb}
-            size='w-full min-h-screen'
+            size='w-full h-full sm:h-5/6 sm:w-8/12 md:w-96'
             isClose={()=> setShowBnb(false)}
             >
                 <div className="flex justify-center">
-                    <form className='flex flex-col w-60'>
+                    <form className='flex flex-col w-60 sm:w-80'>
                         <Input
                             type='text'
                             label='Name'
@@ -151,54 +151,54 @@ const ProfileHost = () => {
 
             <Modal
             isOpen={showEdit}
-            size='w-full min-h-screen'
+            size='w-full h-full sm:w-96 sm:h-5/6'
             isClose={()=> setShowEdit(false)}
             >
-                <div className="text-white mt-10 w-9/12 flex flex-col justify-center">
-                <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
-                <div className="grid grid-cols-2">
+                <div className="text-white mt-10 w-9/12 flex flex-col justify-center sm:mx-auto">
+                    <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
+                    <div className="grid grid-cols-2">
 
-                <div className="flex flex-col mt-10 space-y-3 w-60">
-                    <div>
-                        <Input
-                            type='text'
-                            label='Name'
-                            name='name'
-                            placeholder='Marvin Mckiney'
-                        />
+                    <div className="flex flex-col mt-10 space-y-3 w-60">
+                        <div>
+                            <Input
+                                type='text'
+                                label='Name'
+                                name='name'
+                                placeholder='Marvin Mckiney'
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type='email'
+                                label='Email'
+                                name='email'
+                                placeholder='Marvin@gmail.com'
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type='number'
+                                label='Phone Number'
+                                name='phone_number'
+                                placeholder='08923674327'
+                            />
+                        </div>
+                        <div>
+                            <TextArea
+                                label='Address'
+                                name='address'
+                                placeholder='4140 Parker Rd. Allentown, New Mexico 31134'
+                            />
+                        </div>                    
                     </div>
-                    <div>
-                        <Input
-                            type='email'
-                            label='Email'
-                            name='email'
-                            placeholder='Marvin@gmail.com'
-                        />
                     </div>
-                    <div>
-                        <Input
-                            type='number'
-                            label='Phone Number'
-                            name='phone_number'
-                            placeholder='08923674327'
-                        />
+                    <div className="flex justify-end">
+                            <Button
+                            color="btn-accent"
+                            size='mt-5'
+                            children={"Save"}
+                            />
                     </div>
-                    <div>
-                        <TextArea
-                            label='Address'
-                            name='address'
-                            placeholder='4140 Parker Rd. Allentown, New Mexico 31134'
-                        />
-                    </div>                    
-                </div>
-                </div>
-                <div className="flex justify-end">
-                        <Button
-                        color="btn-accent"
-                        size='mt-5'
-                        children={"Save"}
-                        />
-                </div>
                 </div>
             </Modal>
 

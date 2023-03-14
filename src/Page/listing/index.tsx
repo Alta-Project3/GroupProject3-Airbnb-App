@@ -1,4 +1,5 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
+import axios from "axios"
 
 import Layout from '../../Components/Layout'
 import Navbar from '../../Components/Navbar'
@@ -11,18 +12,39 @@ import TextArea from '../../Components/TextArea'
 import { FaCloudUploadAlt } from 'react-icons/fa';
 
 
-const Listing = () => {
 
+const Listing = () => {
+  
+  const params = {
+    access_key: '3c633bc54e0e5f7ea6b161ad1c4806cf',
+    query: '1600 Pennsylvania Ave NW'
+  }
   const [showEdit, setShowEdit] = useState(false)
   const [showBnb, setShowBnb] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
+
+  useEffect(() => {
+    axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=51.52016005&lon=-0.16030636023550826&apiKey=71097a12eab542b5b01173f273f24c96`)
+      .then(response => {
+        console.log("from Geometry", response.data);
+      }).catch(error => {
+        console.log(error);
+      });
+    axios.get(`https://api.geoapify.com/v1/geocode/search?text=Gedung%20Sate%20Bandung%20Indonesia&apiKey=71097a12eab542b5b01173f273f24c96`)
+      .then(response => {
+        console.log("From Address", response.data);
+      }).catch(error => {
+        console.log(error);
+      });
+  }, [])
+  
 
   return (
     <Layout>
       <Navbar
       children={<h1 className="font-bold text-2xl">Your Listings</h1>}
       />
-        <div className="flex flex-col mt-4 gap-4 w-full items-center">
+        <div className="flex flex-col mt-4 gap-10 w-full justify-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4">
         <ListingCards
           id={1}
           location='Bogor, Indonesia'
@@ -48,6 +70,20 @@ const Listing = () => {
           handleDelete={() => setShowDelete(true)}
           edit={true}
         />
+
+        <ListingCards
+          id={1}
+          location='Bogor, Indonesia'
+          rating={4.7}
+          available="Apr 20 - 29"
+          price={1700000}
+          image="https://www.amesbostonhotel.com/wp-content/uploads/2021/09/Rekomendasi-Penginapan-Villa-di-Bogor.jpg"
+          handleEdit={()=> setShowEdit(true)}
+          toDelete={true}
+          handleDelete={() => setShowDelete(true)}
+          edit={true}
+        />
+
         <ListingCards
           id={1}
           location='Bogor, Indonesia'
@@ -74,11 +110,11 @@ const Listing = () => {
         <Modal
             title='Set Your bnb'
             isOpen={showBnb}
-            size='w-full min-h-screen'
+            size='w-full h-full sm:h-5/6 sm:w-8/12 md:w-96'
             isClose={()=> setShowBnb(false)}
             >
                 <div className="flex justify-center">
-                    <form className='flex flex-col w-60'>
+                    <form className='flex flex-col w-60 sm:w-80'>
                         <Input
                             type='text'
                             label='Name'
@@ -128,11 +164,11 @@ const Listing = () => {
         <Modal
             title='Edit Your bnb'
             isOpen={showEdit}
-            size='w-full min-h-screen'
+            size='w-full h-full sm:h-5/6 sm:w-8/12 md:w-96'
             isClose={()=> setShowEdit(false)}
             >
                 <div className="flex justify-center">
-                    <form className='flex flex-col w-60'>
+                    <form className='flex flex-col w-60 sm:w-80'>
                         <Input
                             type='text'
                             label='Name'
