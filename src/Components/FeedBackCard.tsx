@@ -63,7 +63,7 @@ const FeedBackCard: React.FC<FeedBackProps> = ({
                     <div className="rating">
                         <Rating
                             value={value}
-                            style={{ maxWidth: 180 }}
+                            style={{ maxWidth: 120 }}
                             itemStyles={customStyles}
                             readOnly
                         />
