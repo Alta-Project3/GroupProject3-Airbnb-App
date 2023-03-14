@@ -24,10 +24,10 @@ module.exports = {
   },
   theme: {
     screens: {
-      sm: '480px',
+      sm: '675px',
       md: '768px',
-      lg: '860px',
-      xl: '1110px',
+      lg: '1003px',
+      xl: '1310px',
     },
     extend: {},
   },
