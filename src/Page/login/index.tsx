@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../Components/Layout'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../Components/Input'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
@@ -27,17 +27,8 @@ const Login = () => {
   // Login
   const [cookies, setCookie] = useCookies(['session']);
 
-  const login = (email: string, password: string): Promise<any> => {
-    return axios.post('https://baggioshop.site/login', { email, password })
-      .then(response => console.log(response.data.token))
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormValues(initialFormValues);
 
     try {
       const response = await axios.post(
@@ -48,7 +39,6 @@ const Login = () => {
         }
       );
       const { data } = response.data;
-      console.log(data);
       if (data) {
         Swal.fire({
           position: "center",
@@ -58,7 +48,8 @@ const Login = () => {
           timer: 1500,
         });
         setCookie('session', data.role, { path: "/" });
-        setCookie('session', data.token, { path: "/" });
+        setCookie('session', response.data.token, { path: "/" });
+        console.log(cookies.session)
         // dispatch(login(data));
       }
     } catch (error) {
@@ -72,11 +63,14 @@ const Login = () => {
     }
   }
 
+  // Navigate to home page
+  const navigate = useNavigate();
 
-  const handleLoginSuccess = (response: any) => {
-    console.log(response)
-    // setCookie('session', response.token, { path: '/' });
-  };
+  useEffect(() => {
+    if (cookies.session) {
+      navigate("/home");
+    }
+  }, [cookies.session, navigate]);
 
   return (
     <Layout>
