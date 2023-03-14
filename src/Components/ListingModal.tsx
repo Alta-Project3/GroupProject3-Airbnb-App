@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CurrencyInput from 'react-currency-input-field';
 import Input from './Input'
 import TextArea from './TextArea'
@@ -13,21 +13,21 @@ export interface ListingFormValues {
     price: number | string;
 };
 
-// const initialFormValues: ListingFormValues = {
-//     name: "",
-//     address: "",
-//     latitude: 0,
-//     longitude: 0,
-//     description: "",
-//     price: 0
-// };
-
 interface ListingProps {
+    onSubmit: (formValues: ListingFormValues) => void;
     initialFormValues: ListingFormValues;
+    editMode: boolean;
 }
 
-const ListingModal: React.FC<ListingProps> = ({ initialFormValues }) => {
+const ListingModal: React.FC<ListingProps> = ({ onSubmit, initialFormValues, editMode }) => {
     const [formValues, setFormValues] = useState<ListingFormValues>(initialFormValues);
+
+    useEffect(() => {
+        if (editMode || !editMode) {
+            setFormValues(initialFormValues);
+        }
+    }, [initialFormValues, editMode]);
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
@@ -39,6 +39,7 @@ const ListingModal: React.FC<ListingProps> = ({ initialFormValues }) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        onSubmit(formValues);
         setFormValues(initialFormValues);
     };
 

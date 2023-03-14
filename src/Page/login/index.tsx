@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Layout from '../../Components/Layout'
 import { Link } from 'react-router-dom'
 import Input from '../../Components/Input'
+import axios from 'axios'
+import { useCookies } from 'react-cookie'
 
 interface FormValues {
   email: string;
@@ -14,15 +16,40 @@ const initialFormValues: FormValues = {
 };
 
 const Login = () => {
+  // Forms
   const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
+  // Login
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const login = (email: string, password: string): Promise<any> => {
+    return axios.post('https://baggioshop.site/login', { email, password })
+      .then(response => response.data)
+      .catch(error => {
+        throw new Error(error.response.data.message);
+      });
+  };
+
+  const handleLoginSuccess = (response: any) => {
+    const [cookies, setCookie] = useCookies(['session']);
+
+    setCookie('session', response.token, { path: '/' });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormValues(initialFormValues);
+
+    login(formValues.email, formValues.password)
+      .then(response => handleLoginSuccess(response))
+      .catch(error => {
+        setErrorMessage(error.message)
+        console.log(errorMessage)
+      });
   };
 
   return (
