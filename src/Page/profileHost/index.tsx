@@ -35,8 +35,8 @@ const ProfileHost = () => {
                     Authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Nzg5NTMxNjAsInVzZXJJRCI6MX0.e48mDj4O-vZyFHA3XQ0MQYPhvWPG6PBziEawlEJh5ng'
                 }
             });
-            console.log("datatest: ", response.data.data.data);
-            setData(response.data.data.data);
+            console.log("datatest: ", response.data);
+            setData(response.data);
         } catch (error) {
             console.error(error);
         } finally {

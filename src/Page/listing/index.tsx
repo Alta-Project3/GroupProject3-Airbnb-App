@@ -30,7 +30,7 @@ const Listing = () => {
       }).catch(error => {
         console.log(error);
       });
-    axios.get(`https://api.geoapify.com/v1/geocode/search?text=Gedung%20Sate%20Bandung%20Indonesia&apiKey=71097a12eab542b5b01173f273f24c96`)
+    axios.get(`https://api.geoapify.com/v1/geocode/search?text=Gedung%20Sate,%20Bandung%20Indonesia&apiKey=71097a12eab542b5b01173f273f24c96`)
       .then(response => {
         console.log("From Address", response.data);
       }).catch(error => {
