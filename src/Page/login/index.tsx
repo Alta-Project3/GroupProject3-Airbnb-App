@@ -81,17 +81,13 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className="fixed top-0 left-2">
-        <p className='flex'>
-          <MdAir/> AltaBnb
-        </p> 
-      </div>
-      <div className='flex flex-col h-screen w-9/12 justify-between'>
+
+      <div className='md:bg-primary w-screen flex flex-col h-screen justify-between items-center'>
 
         <div className='mt-10'></div>
 
-        <form className='flex flex-col' onSubmit={handleSubmit}>
-          <h1 className="text-center font-semibold text-4xl">Altabnb</h1>
+        <form className='bg-base-100 rounded-lg max-w-96 md:shadow-xl p-10 flex flex-col' onSubmit={handleSubmit}>
+          <h1 className="text-center font-semibold text-4xl mb-4">Altabnb</h1>
           <Input
             type='email'
             label='Email'
@@ -108,9 +104,7 @@ const Login = () => {
             placeholder='enter your password'
             onChange={handleInputChange}
           />
-          <button type='submit' onClick={() => console.log(formValues.email, formValues.password)} className='self-center btn btn-accent w-1/2 my-2'>Sign In</button>
-          {/* <button type='submit' className='self-center btn btn-accent w-1/2 my-2'><Link to={"/home"}>Sign In</Link></button> */}
-
+          <button type='submit' className='self-center btn btn-accent w-full my-2'>Sign In</button>
           <h3 className='text-l text-center mt-2'>Not on AltaBnb yet? <Link to={"/register"} className='underline hover:text-accent'>Sign Up</Link> </h3>
         </form>
 
