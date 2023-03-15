@@ -67,8 +67,6 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
                     Authorization: `Bearer ${cookies.session}` 
                 }
             });
-            console.log("datatest: ", response.data.data)
-            console.log("img: ", response.data.data.profile_picture);
             setImg(response.data.data.profile_picture)
         } catch (error) {
             console.error(error);
