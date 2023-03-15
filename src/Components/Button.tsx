@@ -5,11 +5,12 @@ interface ButtonProps{
     color?: string
     onClick?: React.MouseEventHandler
     children?: React.ReactNode
+    type?: any
 }
 
-const Button: React.FC<ButtonProps> = ({size, color, onClick, children}) => {
+const Button: React.FC<ButtonProps> = ({size, color, onClick, children, type}) => {
     return (
-        <button className={`btn ${size} ${color} text-primary font-bold cursor-pointer sm:font-bold`}
+        <button type={type} className={`btn ${size} ${color} text-primary font-bold cursor-pointer sm:font-bold`}
             onClick={onClick}
         >{children}</button>
     )

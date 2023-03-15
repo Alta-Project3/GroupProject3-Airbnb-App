@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { FaChevronCircleLeft } from "react-icons/fa"
 import { HiCog6Tooth } from 'react-icons/hi2'
 import { FaSignOutAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useCookies } from 'react-cookie'
+
+import axios from 'axios'
 
 interface NavbarProps {
     name?: string
@@ -13,10 +15,14 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
+    
+    
+    // handle log out
     const [cookies, setCookie, removeCookie] = useCookies(['session', 'role']);
     const navigate = useNavigate()
 
-    // handle log out
+    
+    
     const handleLogout = () => {
         Swal.fire({
             title: "Are you sure?",
@@ -24,12 +30,19 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
             showCancelButton: true,
             confirmButtonText: "Yes",
             cancelButtonText: "No",
+            color: '#ffffff',
+            background: '#0B3C95 ',
+            confirmButtonColor: "#FDD231",
+            cancelButtonColor: "#FE4135",
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
                     position: "center",
                     icon: "success",
                     text: "Logout successfully",
+                    iconColor: '#FDD231',
+                    color: '#ffffff',
+                    background: '#0B3C95 ',
                     showConfirmButton: false,
                     timer: 1500,
                 })
@@ -40,6 +53,34 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
         });
     }
 
+
+    //Handle Profile Picture
+    const [loading, setLoading] = React.useState(false)
+    const [img, setImg] = React.useState<any>()  
+    const endpoint = `https://baggioshop.site/users`
+
+    const fetchDataUser = async () => {
+        try {
+            const response = await axios.get(endpoint, {
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${cookies.session}` 
+                }
+            });
+            console.log("datatest: ", response.data.data)
+            console.log("img: ", response.data.data.profile_picture);
+            setImg(response.data.data.profile_picture)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDataUser();
+    }, [endpoint]);
+    
     return (
         <div className="navbar w-screen bg-base-100 shadow-md z-10 top-0 sticky text-white border-b-2 border-primary">
             <div className="flex-1 ml-1 space-x-4">
@@ -53,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
             <div className="flex-none space-x-5">
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="">
-                        <img src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaXaKH9Q7gVGHSc2_IK3mOhpEaiULsMGxwRUe2nL4b&s`} className='rounded-full w-12 h-12 sm:h-8 sm:w-8' alt="" />
+                        <img src={img} className='rounded-full w-10 h-10 sm:h-8 sm:w-8' alt="" />
                     </label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
                         <li onClick={() => navigate('/profile_host')}><a>
