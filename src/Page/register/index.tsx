@@ -89,9 +89,9 @@ const Register = () => {
   
   return (
     <Layout>
-      <div className='flex flex-col h-screen justify-between w-9/12'>
+      <div className='md:bg-primary w-screen flex flex-col h-screen justify-between items-center'>
         <div className='mt-10'></div>
-        <form onSubmit={handleSubmit} className='flex flex-col' action="">
+        <form onSubmit={handleSubmit} className='bg-base-100 rounded-lg max-w-96 md:shadow-xl p-10 flex flex-col' action="">
           <h1 className="text-center font-semibold text-4xl">Sign Up</h1>
           <Input
             type='text'
@@ -133,9 +133,9 @@ const Register = () => {
             placeholder='enter your password'
             onChange={handleInputChange}
           />
-          <button type='submit' className='self-center btn btn-accent w-1/2 my-2'>Sign Up</button>
+          <button type='submit' className='self-center btn btn-accent w-full my-2'>Sign Up</button>
           
-          <h3 className='text-l text-center mt-2'>Already Have an Account? <Link to={"/"} className='underline hover:text-accent'>Sign Up</Link> </h3>
+          <h3 className='text-l text-center mt-2'>Already Have an Account? <Link to={"/"} className='underline hover:text-accent'>Log in</Link> </h3>
 
         </form>
         <h2 className='text-xl text-accent font-semibold text-center mb-10'>Powered by Group2</h2>

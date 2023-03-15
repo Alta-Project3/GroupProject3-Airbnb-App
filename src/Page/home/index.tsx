@@ -32,9 +32,11 @@ const initialFormValues: FormValues = {
 const Home = () => {
   // Connect to api
   const [cookies, setCookie, removeCookie] = useCookies(['session']);
-  const endpoint = `https://baggioshop.site/rooms`
+  const endpoint = `https://baggioshop.site/rooms`;
   const [rooms, setRooms] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const geoapiKey = "71097a12eab542b5b01173f273f24c96";
+
 
   const fetchRoomData = async () => {
     try {
@@ -42,7 +44,7 @@ const Home = () => {
         endpoint,
         { headers: { Authorization: `Bearer ${cookies.session}` } }
       );
-      console.log("datatest: ", response.data.data);
+      console.log("room data: ", response.data.data);
       setRooms(response.data.data);
     } catch (error) {
       console.error(error);
@@ -54,6 +56,7 @@ const Home = () => {
   useEffect(() => {
     fetchRoomData();
   }, [endpoint]);
+
 
   // Form
   const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
@@ -173,25 +176,11 @@ const Home = () => {
             <ListingCards
               key={room.id}
               id={room.id}
-              location={room.location}
+              location={room.address}
               rating={room.rating}
               available={room.available}
               price={room.price}
               image={room.image}
-            />
-          )
-        })}
-
-        {stays.map((stay: any) => {
-          return (
-            <ListingCards
-              key={stay.id}
-              id={stay.id}
-              location={stay.location}
-              rating={stay.rating}
-              available={stay.available}
-              price={stay.price}
-              image={stay.image}
             />
           )
         })}
