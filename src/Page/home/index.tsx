@@ -53,44 +53,6 @@ const Home = () => {
     }
   };
 
-  const fetchLatLon = (address: string) => {
-    return axios
-      .get(`https://api.geoapify.com/v1/geocode/search?text=${address}&apiKey=${geoapiKey}`)
-      .then((response) => {
-        const properties = response.data.features[0].properties;
-        return [properties.lat, properties.lon];
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const fetchAddress = (lat: number, lon: number) => {
-    return axios.get(
-      `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=${geoapiKey}`
-    )
-      .then(response => {
-        let properties = response.data.features[0].properties;
-        return `${properties.address_line1}`;
-      })
-      .catch(error => {
-        console.log(error)
-        return ""
-      })
-  };
-
-  Promise.all(
-    rooms.map((room: any) => {
-      return fetchAddress(room.latitude, room.longitude)
-        .then(address => {
-          room.address = address;
-          return room;
-        });
-    })
-  ).then(locationsWithAddress => {
-    setRooms(locationsWithAddress);
-  });
-
   useEffect(() => {
     fetchRoomData();
   }, [endpoint]);
