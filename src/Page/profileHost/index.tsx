@@ -33,6 +33,10 @@ const initialFormValues: FormValues = {
     address: "",
 };
 
+interface Event<T = EventTarget>{
+    target: T
+}
+
 const ProfileHost = () => {
 
     const navigate = useNavigate()
@@ -47,7 +51,9 @@ const ProfileHost = () => {
     const [loading, setLoading] = useState(false)
     const [id, setId] = useState()
     const Role = 'Host'
-    const profile = ''
+    const [lat, setLat] = useState(0)
+    const [lon, setLon] = useState(0)
+    const [selectedFile, setSelectedFile] = useState<File | null>()
 
 
     const fetchDataUser = async () => {
@@ -58,8 +64,6 @@ const ProfileHost = () => {
                     Authorization: `Bearer ${cookies.session}` 
                 }
             });
-            console.log("datatest: ", response.data.data)
-            console.log("name: ", response.data.data.name);
             setData(response.data.data);
             setId(response.data.data.id)
         } catch (error) {
@@ -79,6 +83,11 @@ const ProfileHost = () => {
 
     const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
+    };
+
+    const handleFileInputChange = (event: Event<HTMLInputElement>) => {
+        const file = event.target.files[0];
+        setSelectedFile(file);
     };
 
     const handleEditUser = (e: React.FormEvent<HTMLFormElement>) => {
@@ -200,38 +209,79 @@ const ProfileHost = () => {
             }
         })
     }
+
+    const roomEndpoint = `https://baggioshop.site/rooms`
+    
     const initialListingFormValues: ListingFormValues = {
         name: "",
         address: "",
         latitude: 0,
         longitude: 0,
         description: "",
-        price: ""
+        price: "",
+        file: '',
     };
 
+    const myKey = '71097a12eab542b5b01173f273f24c96'
+    
     const handleNewListing = (formValues: ListingFormValues) => {
         console.log(formValues)
-        // setLoading(true);
-        // axios
-        //     .post(endpoint,
-        //         {
-        //             full_name: formValues.full_name,
-        //             email: formValues.email,
-        //             password: formValues.password,
-        //             team: formValues.team,
-        //             role: formValues.role,
-        //             status: formValues.status
-        //         },
-        //         { headers: { Authorization: `Bearer ${cookies.userToken}` } }
-        //     )
-        //     .then(result => {
-        //         console.log("Form submitted with values: ", result)
-        //         fetchTableData();
-        //     })
-        //     .catch(error => console.log(error))
-        //     .finally(() => setLoading(false));
+        setLoading(true);
+        axios.get(`https://api.geoapify.com/v1/geocode/search?text=${formValues.address}&apiKey=${myKey}`)
+        .then(response => {
+            setLat(response.data.features[0].properties.lat)
+            setLon(response.data.features[0].properties.lon)
+            console.log("lat", response.data.features[0].properties.lat);
+            console.log("lon", response.data.features[0].properties.lon);
+            axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${response.data.features[0].properties.lat}&lon=${response.data.features[0].properties.lon}&apiKey=${myKey}`)
+            .then(response => {
+                const formData = new FormData();
+                formData.append('file', formValues.file);
+                axios.post(roomEndpoint,
+                    {
+                        user_id : id,
+                        room_name : formValues.name,
+                        price : formValues.price,
+                        description : formValues.description,
+                        latitude : response.data.features[0].properties.lat,
+                        longitude : response.data.features[0].properties.lon,
+                        address : response.data.features[0].properties.city,
+                        room_picture : formData
+                    },
+                    { headers: { 
+                        Authorization: `Bearer ${cookies.session}`,
+                        Accept: 'application/json',
+                        "Content-Type" : 'multipart/form-data'
+                    }
+                }
+                )
+                .then(result => {
+                    console.log("Form submitted with values: ", result)
+                })
+                .catch((error) => {
+                Swal.fire({
+                    title: "Failed",
+                    icon: "error",
+                    iconColor: '#FDD231',
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    color: '#ffffff',
+                    background: '#0B3C95 ',
+                    confirmButtonColor: "#FDD231",
+                    cancelButtonColor: "#FE4135",
+                })
+                console.log(error)
+                })
+                .finally(() => setLoading(false));
+            }).catch(error => {
+                console.log(error);
+            });
+        }).catch(error => {
+            console.log(error);
+        })
     }
-
+    
     return (
         <Layout>
             <Navbar />
@@ -377,29 +427,6 @@ const ProfileHost = () => {
                             />
                         </div>
                         </form>
-                </div>
-            </Modal>
-
-            <Modal
-                isOpen={showDelete}
-                isClose={() => setShowDelete(false)}
-                size='w-80'
-            >
-                <div className="flex flex-col justify-center">
-                    <h1 className='text-2xl text-center'>Are You Sure To Delete Your Account ?</h1>
-                    <div className="flex flex-row justify-center space-x-4">
-                        <Button
-                            color="btn-warning"
-                            size='mt-5'
-                            children={"Cancel"}
-                        />
-                        <Button
-                            color="btn-accent"
-                            size='mt-5'
-                            children={"Yes, I Sure"}
-                        />
-                    </div>
-
                 </div>
             </Modal>
         </Layout>

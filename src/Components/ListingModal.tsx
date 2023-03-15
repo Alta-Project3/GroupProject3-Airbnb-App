@@ -11,6 +11,7 @@ export interface ListingFormValues {
     longitude: number;
     description: string;
     price: number | string;
+    file:  string
 };
 
 interface ListingProps {
@@ -35,6 +36,10 @@ const ListingModal: React.FC<ListingProps> = ({ onSubmit, initialFormValues, edi
 
     const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
+    };
+
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormValues({...formValues,[e.target.files[0]]: e.target.value})
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,19 +97,15 @@ const ListingModal: React.FC<ListingProps> = ({ onSubmit, initialFormValues, edi
                     onChange={handleInputChange}
                 /> */}
 
-                <div className="flex flex-col justify-center w-full mt-2">
-                    <label htmlFor="">
-                        Your Home Photos
-                    </label>
-                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-30  rounded-lg cursor-pointer bg-primary dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <FaCloudUploadAlt className='text-6xl text-gray-400' />
-                            <p className="mb-2 text-sm text-gray-400 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                            <p className="text-xs text-gray-400 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                        </div>
-                        <input id='dropzone-file' type="file" className="hidden" />
-                    </label>
-                </div>
+                <Input
+                    type='file'
+                    label='Your Room Photo'
+                    name='file'
+                    classes='file-input file-input-primary'
+                    placeholder='set room name'
+                    value={formValues.file}
+                    onChange={handleFileInputChange}
+                />
 
                 <button type='submit' className='btn btn-accent'>Save</button>
             </form>

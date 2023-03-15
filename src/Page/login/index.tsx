@@ -5,6 +5,7 @@ import Input from '../../Components/Input'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import Swal from "sweetalert2";
+import {MdAir} from "react-icons/md"
 
 interface FormValues {
   email: string;
@@ -80,6 +81,7 @@ const Login = () => {
 
   return (
     <Layout>
+
       <div className='md:bg-primary w-screen flex flex-col h-screen justify-between items-center'>
 
         <div className='mt-10'></div>
