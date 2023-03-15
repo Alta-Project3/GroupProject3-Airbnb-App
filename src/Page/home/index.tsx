@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../Components/Layout'
 import ListingCards from '../../Components/ListingCards'
 import Navbar from '../../Components/Navbar'
@@ -11,6 +11,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Rating } from '@smastrom/react-rating'
 import { AiFillStar } from 'react-icons/ai'
 import CurrencyInput from 'react-currency-input-field';
+import axios from 'axios'
+import { useCookies } from 'react-cookie'
 
 interface FormValues {
   minprice: number;
@@ -28,6 +30,31 @@ const initialFormValues: FormValues = {
 
 
 const Home = () => {
+  // Connect to api
+  const [cookies, setCookie, removeCookie] = useCookies(['session']);
+  const endpoint = `https://baggioshop.site/rooms`
+  const [rooms, setRooms] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchRoomData = async () => {
+    try {
+      const response = await axios.get(
+        endpoint,
+        { headers: { Authorization: `Bearer ${cookies.session}` } }
+      );
+      console.log("datatest: ", response.data.data);
+      setRooms(response.data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoomData();
+  }, [endpoint]);
+
   // Form
   const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
 
@@ -61,6 +88,7 @@ const Home = () => {
   const handleClick = () => {
     setShowModal(true)
   }
+
 
   return (
     <Layout>
@@ -140,6 +168,20 @@ const Home = () => {
       </Navbar>
 
       <div className='flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+        {rooms.map((room: any) => {
+          return (
+            <ListingCards
+              key={room.id}
+              id={room.id}
+              location={room.location}
+              rating={room.rating}
+              available={room.available}
+              price={room.price}
+              image={room.image}
+            />
+          )
+        })}
+
         {stays.map((stay: any) => {
           return (
             <ListingCards

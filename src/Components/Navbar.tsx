@@ -13,7 +13,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['session']);
+    const [cookies, setCookie, removeCookie] = useCookies(['session', 'role']);
     const navigate = useNavigate()
 
     // handle log out
@@ -34,6 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
                     timer: 1500,
                 })
                 removeCookie('session');
+                removeCookie('role');
                 navigate("/");
             }
         });

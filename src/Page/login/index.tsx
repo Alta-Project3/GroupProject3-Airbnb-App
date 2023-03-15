@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   // Login
-  const [cookies, setCookie] = useCookies(['session']);
+  const [cookies, setCookie] = useCookies(['session', 'role']);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +47,7 @@ const Login = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-        setCookie('session', data.role, { path: "/" });
+        setCookie('role', data.role, { path: "/" });
         setCookie('session', response.data.token, { path: "/" });
         console.log(cookies.session)
         // dispatch(login(data));
