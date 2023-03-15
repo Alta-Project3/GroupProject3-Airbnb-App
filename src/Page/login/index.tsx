@@ -44,8 +44,11 @@ const Login = () => {
           position: "center",
           icon: "success",
           text: "Signed successfully",
+          iconColor: '#FDD231',
           showConfirmButton: false,
-          timer: 1500,
+          color: '#ffffff',
+          background: '#0B3C95 ',
+          timer: 2000,
         });
         setCookie('role', data.role, { path: "/" });
         setCookie('session', response.data.token, { path: "/" });
@@ -58,6 +61,9 @@ const Login = () => {
         icon: "error",
         title: "Email or Password incorrect",
         showConfirmButton: true,
+        color: '#ffffff',
+        background: '#0B3C95 ',
+        confirmButtonColor: "#FDD231",
       });
       console.log(error);
     }

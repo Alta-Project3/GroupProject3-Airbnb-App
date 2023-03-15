@@ -71,10 +71,10 @@ const Register = () => {
     .catch((error)=> {
       console.log(error)
       Swal.fire({
-        icon: 'warning',
-        iconColor: '#FE4135',
+        icon: 'error',
         padding: '1em',
         title: `${error.response.data.message}`,
+        text: 'try with other email',
         color: '#ffffff',
         background: '#0B3C95 ',
         confirmButtonColor: "#FDD231",
@@ -134,9 +134,11 @@ const Register = () => {
             onChange={handleInputChange}
           />
           <button type='submit' className='self-center btn btn-accent w-1/2 my-2'>Sign Up</button>
+          
+          <h3 className='text-l text-center mt-2'>Already Have an Account? <Link to={"/"} className='underline hover:text-accent'>Sign Up</Link> </h3>
+
         </form>
         <h2 className='text-xl text-accent font-semibold text-center mb-10'>Powered by Group2</h2>
-
       </div>
     </Layout>
   )
