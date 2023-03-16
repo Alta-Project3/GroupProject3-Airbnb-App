@@ -11,8 +11,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Rating } from '@smastrom/react-rating'
 import { AiFillStar } from 'react-icons/ai'
 import CurrencyInput from 'react-currency-input-field';
+import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
+import sowwy from '../../assets/Sorry.jpg'
 
 interface FormValues {
   minprice: number;
@@ -36,39 +38,28 @@ const Home = () => {
   const [rooms, setRooms] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const geoapiKey = "71097a12eab542b5b01173f273f24c96";
-
-
-  const fetchRoomData = async () => {
-    try {
-      const response = await axios.get(
-        endpoint,
-        { headers: { Authorization: `Bearer ${cookies.session}` } }
-      );
-      console.log("room data: ", response.data.data);
-      setRooms(response.data.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRoomData();
-  }, [endpoint]);
-
+  const [dateStart, setDateStart] = useState('')
+  const [dateEnd, setDateEnd] = useState('')
 
   // Form
   const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
-
+  
+  
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
-
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormValues(initialFormValues);
-  };
+    if(formValues.daterange[0] && formValues.daterange[1]){
+      setDateStart(formValues.daterange[0].toISOString().slice(0, 10).replace(/-/g, '-'))
+      setDateEnd(formValues.daterange[0].toISOString().slice(0, 10).replace(/-/g, '-'))
+    }
+    fetchRoomData()
+    setShowModal(false)
+  }
 
   // Date Picker
   const [startDate, endDate] = formValues.daterange;
@@ -84,6 +75,43 @@ const Home = () => {
     inactiveFillColor: '#0b3c95',
 
   };
+
+  const filterEndpoint = `https://baggioshop.site/rooms/filter/data?`
+  const filter = `rating=${formValues.minrating}&date_start=${dateStart}&date_end=${dateEnd}&price_min=${formValues.minprice}&price_max=${formValues.maxprice}`
+  const fetchRoomData = async () => {
+    try {
+      const response = await axios.get(
+        `${filterEndpoint}${filter}`,
+        { headers: { Authorization: `Bearer ${cookies.session}` } }
+      );
+      console.log("room data: ", response.data.data);
+      setRooms(response.data.data);
+      if(response.data.data === null){
+        Swal.fire({
+          title: 'Room Is Not Avaible',
+          text: 'Please Check Again!!!',
+          imageUrl: `${sowwy}`,
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: 'Custom image',
+          confirmButtonText: "Yes",
+          color: '#ffffff',
+          background: '#1b44a6',
+          confirmButtonColor: "#FDD231",
+          }).then((willFetch)=>{
+          window.location.reload()
+        })
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoomData();
+  }, [filterEndpoint]);
 
   // Modal
   const [showModal, setShowModal] = useState(false);
@@ -172,19 +200,23 @@ const Home = () => {
 
       <div className='flex w-10/12'>
         <div className='max-w-screen-xl flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
-          {rooms.map((room: any) => {
-            return (
-              <ListingCards
-                key={room.id}
-                id={room.id}
-                location={room.address}
-                rating={room.rating}
-                available={room.available}
-                price={room.price}
-                image={room.room_picture}
-              />
-            )
-          })}
+          { rooms && loading ? (
+            rooms.map((room: any) => {
+              return (
+                <ListingCards
+                  key={room.id}
+                  id={room.id}
+                  location={room.address}
+                  rating={room.rating}
+                  available={room.available}
+                  price={room.price}
+                  image={room.room_picture}
+                />
+              )
+            })
+          ) : (
+              <h1>Loading</h1>
+          )}
         </div>
       </div>
 

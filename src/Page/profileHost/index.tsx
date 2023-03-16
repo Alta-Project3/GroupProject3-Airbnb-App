@@ -17,6 +17,8 @@ import ListingModal, { ListingFormValues } from '../../Components/ListingModal';
 import { FaPenSquare } from 'react-icons/fa'
 import { FaRoad } from 'react-icons/fa'
 import { FaCloudUploadAlt } from 'react-icons/fa';
+import { HiPencil } from 'react-icons/hi2';
+import {GiJourney} from 'react-icons/gi'
 
 
 interface FormValues {
@@ -214,78 +216,89 @@ const ProfileHost = () => {
     return (
         <Layout>
             <Navbar />
-            <div className="text-white mt-10 w-9/12 flex flex-col sm:justify-center">
-                <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-center'>Personal Information</h1>
-                <div className="grid grid-cols-2 sm:grid-cols-1 sm:justify-items-center">
 
-                    <div className="flex flex-col mt-10 space-y-3 w-60 sm:w-96">
-                        <div className='border-b-2 border-primary'>
-                            <label htmlFor="name" className='text-l font-semibold'>
-                                Name
-                            </label>
-                            <p className='text-slate-300 text-l'>{data.name}</p>
+            <div className='md:bg-primary w-screen flex flex-col h-screen justify-between items-center'>
+                <div className="text-white mt-10 w-9/12 flex flex-col sm:justify-center">
+                    <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-center'>Personal Information</h1>
+                    <div className="grid grid-cols-2 sm:grid-cols-1 sm:justify-items-center">
+
+                        <div className="flex flex-col mt-10 space-y-3 w-60 sm:w-96">
+                            <div className='border-b-2 border-primary md:border-base-100'>
+                                <label htmlFor="name" className='text-l font-semibold'>
+                                    Name
+                                </label>
+                                <p className='text-slate-300 text-l'>{data.name}</p>
+                            </div>
+                            <div className='border-b-2 border-primary md:border-base-100'>
+                                <label htmlFor="email" className='text-l font-semibold'>
+                                    Email
+                                </label>
+                                <p className='text-slate-300 text-l italic'>{data.email}</p>
+                            </div>
+                            <div className='border-b-2 border-primary md:border-base-100'>
+                                <label htmlFor="phone_number" className='text-l font-semibold'>
+                                    Phone Number
+                                </label>
+                                <p className='text-slate-300 text-l'>{data.phone}</p>
+                            </div>
+                            <div className='border-b-2 border-primary md:border-base-100'>
+                                <label htmlFor="address" className='text-l font-semibold'>
+                                    Address
+                                </label>
+                                <p className='text-slate-300 text-l'>
+                                    {data.address}
+                                </p>
+                            </div>
+                            <div className='space-y-3'>
+                                <p className='text-sm font-semibold underline italic flex cursor-pointer' onClick={() => setShowEdit(true)}>
+                                <HiPencil className='mr-1 text-xl' />Edit Your Profile ?
+                                </p>
+                                <p className='text-sm font-semibold underline italic flex cursor-pointer' onClick={() => navigate('/trip')}>
+                                <GiJourney className='text-xl mr-1' />See Your Trip
+                                </p>
+                            </div>
                         </div>
-                        <div className='border-b-2 border-primary'>
-                            <label htmlFor="email" className='text-l font-semibold'>
-                                Email
-                            </label>
-                            <p className='text-slate-300 text-l italic'>{data.email}</p>
-                        </div>
-                        <div className='border-b-2 border-primary'>
-                            <label htmlFor="phone_number" className='text-l font-semibold'>
-                                Phone Number
-                            </label>
-                            <p className='text-slate-300 text-l'>{data.phone}</p>
-                        </div>
-                        <div className='border-b-2 border-primary'>
-                            <label htmlFor="address" className='text-l font-semibold'>
-                                Address
-                            </label>
-                            <p className='text-slate-300 text-l'>
-                                {data.address}
-                            </p>
+                        <div className="flex w-20 ml-10 space-x-2 mt-8 sm:ml-4 sm:hidden">
+                            <Button
+                                color='btn-accent'
+                                size='btn-sm text-xl'
+                                children={<FaPenSquare />}
+                                onClick={() => setShowEdit(true)}
+                            />
+                            <Button
+                                color='btn-white'
+                                size='btn-sm text-xl'
+                                children={<FaRoad />}
+                                onClick={() => navigate('/trip')}
+                            />
                         </div>
                     </div>
-                    <div className="flex w-20 ml-10 space-x-2 mt-8 sm:mx-auto">
+                    <div className="flex flex-col w-5/6 mt-10 space-y-3 sm:items-center md:ml-10">
+                        <Button
+                            color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
+                            size={`sm:w-60 sm:btn-sm  ${cookies.role === Role ? 'static' : 'hidden'}`}
+                            children={'View Your List Bnb'}
+                            onClick={() => navigate(`/list_bnb/${data.id}`,{
+                                    state:{
+                                        id: data.id
+                                    }
+                                }
+                            )}
+                        />
                         <Button
                             color='btn-accent'
-                            size='btn-sm text-xl'
-                            children={<FaPenSquare />}
-                            onClick={() => setShowEdit(true)}
-                        />
-                        <Button
-                            color='btn-white'
-                            size='btn-sm sm:text-primary text-xl'
-                            children={<FaRoad />}
-                            onClick={() => navigate('/trip')}
+                            size='sm:w-60 sm:btn-sm sm:text-xs'
+                            children={cookies.role === Role ? 'Create New Bnb' : 'Make your home Bnb ?'}
+                            onClick={cookies.role === Role ? () => setShowBnb(true) : handleUpgradeUser}
                         />
                     </div>
-                </div>
-                <div className="flex flex-col w-5/6 mt-10 space-y-3 sm:items-center">
-                    <Button
-                        color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
-                        size={`sm:w-60 sm:btn-sm  ${cookies.role === Role ? 'static' : 'hidden'}`}
-                        children={'View Your List Bnb'}
-                        onClick={() => navigate(`/list_bnb/${data.id}`,{
-                                state:{
-                                    id: data.id
-                                }
-                            }
-                        )}
-                    />
-                    <Button
-                        color='btn-accent'
-                        size='sm:w-60 sm:btn-sm sm:text-xs'
-                        children={cookies.role === Role ? 'Create New Bnb' : 'Make your home Bnb ?'}
-                        onClick={cookies.role === Role ? () => setShowBnb(true) : handleUpgradeUser}
-                    />
-                </div>
-                <div className="flex w-5/6 mt-20 mb-10 sm:justify-center">
-                    <Button
-                        color='btn-warning sm:btn-sm sm:text-xs'
-                        children={'Delete Account'}
-                        onClick={handleDeleteUser}
-                    />
+                    <div className="flex w-5/6 mt-20 mb-10 sm:justify-center">
+                        <Button
+                            color='btn-warning sm:btn-sm sm:text-xs'
+                            children={'Delete Account'}
+                            onClick={handleDeleteUser}
+                        />
+                    </div>
                 </div>
             </div>
             <Modal
