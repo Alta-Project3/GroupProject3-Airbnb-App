@@ -33,9 +33,7 @@ const initialFormValues: FormValues = {
     address: "",
 };
 
-interface Event<T = EventTarget>{
-    target: T
-}
+
 
 const ProfileHost = () => {
 
@@ -53,7 +51,7 @@ const ProfileHost = () => {
     const Role = 'Host'
     const [lat, setLat] = useState(0)
     const [lon, setLon] = useState(0)
-    const [selectedFile, setSelectedFile] = useState<File | null>()
+    const [file, setFile] = useState<File | any>(null)
 
 
     const fetchDataUser = async () => {
@@ -85,20 +83,23 @@ const ProfileHost = () => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
     };
 
-    const handleFileInputChange = (event: Event<HTMLInputElement>) => {
-        const file = event.target.files[0];
-        setSelectedFile(file);
-    };
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if(files){
+            setFile(files[0]);
+        };
+    }
 
     const handleEditUser = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true);
-        axios.put(endpoint, {
-                name: formValues.name,
-                email: formValues.email,
-                phone: formValues.phone,
-                address: formValues.address,
-            },
+        const formData = new FormData();
+        formData.append("name", formValues.name);
+        formData.append("email", formValues.email);
+        formData.append("phone", formValues.phone);
+        formData.append("address", formValues.address);
+        formData.append("profile_picture", file);
+        axios.put(endpoint, formData,
                 { headers: { 
                     Authorization: `Bearer ${cookies.session}`,
                     Accept: 'application/json',
@@ -212,75 +213,73 @@ const ProfileHost = () => {
 
     const roomEndpoint = `https://baggioshop.site/rooms`
     
-    const initialListingFormValues: ListingFormValues = {
-        name: "",
-        address: "",
-        latitude: 0,
-        longitude: 0,
-        description: "",
-        price: "",
-        file: '',
-    };
+    // const initialListingFormValues: ListingFormValues = {
+    //     name: "",
+    //     address: "",
+    //     latitude: 0,
+    //     longitude: 0,
+    //     description: "",
+    //     price: "",
+    //     file: '',
+    // };
 
     const myKey = '71097a12eab542b5b01173f273f24c96'
     
-    const handleNewListing = (formValues: ListingFormValues) => {
-        console.log(formValues)
-        setLoading(true);
-        axios.get(`https://api.geoapify.com/v1/geocode/search?text=${formValues.address}&apiKey=${myKey}`)
-        .then(response => {
-            setLat(response.data.features[0].properties.lat)
-            setLon(response.data.features[0].properties.lon)
-            console.log("lat", response.data.features[0].properties.lat);
-            console.log("lon", response.data.features[0].properties.lon);
-            axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${response.data.features[0].properties.lat}&lon=${response.data.features[0].properties.lon}&apiKey=${myKey}`)
-            .then(response => {
-                const formData = new FormData();
-                formData.append('file', formValues.file);
-                axios.post(roomEndpoint,
-                    {
-                        user_id : id,
-                        room_name : formValues.name,
-                        price : formValues.price,
-                        description : formValues.description,
-                        latitude : response.data.features[0].properties.lat,
-                        longitude : response.data.features[0].properties.lon,
-                        address : response.data.features[0].properties.city,
-                        room_picture : formData
-                    },
-                    { headers: { 
-                        Authorization: `Bearer ${cookies.session}`,
-                        Accept: 'application/json',
-                        "Content-Type" : 'multipart/form-data'
-                    }
-                }
-                )
-                .then(result => {
-                    console.log("Form submitted with values: ", result)
-                })
-                .catch((error) => {
-                Swal.fire({
-                    title: "Failed",
-                    icon: "error",
-                    iconColor: '#FDD231',
-                    showCancelButton: true,
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No",
-                    color: '#ffffff',
-                    background: '#0B3C95 ',
-                    confirmButtonColor: "#FDD231",
-                    cancelButtonColor: "#FE4135",
-                })
-                console.log(error)
-                })
-                .finally(() => setLoading(false));
-            }).catch(error => {
-                console.log(error);
-            });
-        }).catch(error => {
-            console.log(error);
-        })
-    }
+
+    // const handleNewListing = (formValues: ListingFormValues) => {
+    //     console.log(formValues)
+    //     setLoading(true);
+    //     axios.get(`https://api.geoapify.com/v1/geocode/search?text=${formValues.address}&apiKey=${myKey}`)
+    //     .then(response => {
+    //         setLat(response.data.features[0].properties.lat)
+    //         setLon(response.data.features[0].properties.lon)
+    //         console.log("lat", response.data.features[0].properties.lat);
+    //         console.log("lon", response.data.features[0].properties.lon);
+    //         axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${response.data.features[0].properties.lat}&lon=${response.data.features[0].properties.lon}&apiKey=${myKey}`)
+    //         .then(response => {
+    //             const formData = new FormData();
+    //             formData.append('room_picture', formValues.file);
+    //             formData.append('room_name', formValues.name);
+    //             formData.append('address', response.data.features[0].properties.city);
+    //             formData.append('description', formValues.description);
+    //             formData.append('price', formValues.price);
+    //             formData.append('latitude', response.data.features[0].properties.lat);
+    //             formData.append('longitude', response.data.features[0].properties.lon);
+    //             axios.post(roomEndpoint, formData,
+    //                 { headers: { 
+    //                     Authorization: `Bearer ${cookies.session}`,
+    //                     Accept: 'application/json',
+    //                     "Content-Type" : 'multipart/form-data'
+    //                 }
+    //             }
+    //             )
+    //             .then(result => {
+    //                 console.log("Form submitted with values: ", result)
+                    
+    //             })
+    //             .catch((error) => {
+    //             Swal.fire({
+    //                 title: "Failed",
+    //                 icon: "error",
+    //                 iconColor: '#FDD231',
+    //                 showCancelButton: true,
+    //                 confirmButtonText: "Yes",
+    //                 cancelButtonText: "No",
+    //                 color: '#ffffff',
+    //                 background: '#0B3C95 ',
+    //                 confirmButtonColor: "#FDD231",
+    //                 cancelButtonColor: "#FE4135",
+    //             })
+    //             console.log(error)
+    //             })
+    //             .finally(() => setLoading(false));
+    //         }).catch(error => {
+    //             console.log(error);
+    //         });
+    //     }).catch(error => {
+    //         console.log(error);
+    //     })
+    // }
     
     return (
         <Layout>
@@ -337,7 +336,12 @@ const ProfileHost = () => {
                         color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
                         size={`sm:w-60 sm:btn-sm  ${cookies.role === Role ? 'static' : 'hidden'}`}
                         children={'View Your List Bnb'}
-                        onClick={() => navigate('/list_bnb')}
+                        onClick={() => navigate(`/list_bnb/${data.id}`,{
+                                state:{
+                                    id: data.id
+                                }
+                            }
+                        )}
                     />
                     <Button
                         color='btn-accent'
@@ -361,9 +365,9 @@ const ProfileHost = () => {
                 isClose={() => setShowBnb(false)}
             >
                 <ListingModal
-                    onSubmit={handleNewListing}
-                    initialFormValues={initialListingFormValues}
-                    editMode={false}
+                    // onSubmit={handleNewListing}
+                    // initialFormValues={initialListingFormValues}
+                    // editMode={false}
                 />
             </Modal>
 
@@ -414,6 +418,16 @@ const ProfileHost = () => {
                                         placeholder={`${data.address}`}
                                         value={formValues.address}
                                         onChange={handleTextAreaChange}
+                                    />
+                                </div>
+                                <div>
+                                    <Input
+                                    type='file'
+                                    label='Your Room Photo'
+                                    name='file'
+                                    classes='file-input file-input-primary'
+                                    placeholder='set room name'
+                                    onChange={handleFileInputChange}
                                     />
                                 </div>
                             </div>
