@@ -23,13 +23,21 @@ module.exports = {
     ],
   },
   theme: {
+    extend: {
+      lineClamp: {
+        7: '7',
+        8: '8',
+        9: '9',
+        10: '10',
+        14: '14'
+      }
+    },
     screens: {
       sm: '675px',
       md: '768px',
       lg: '1003px',
       xl: '1310px',
     },
-    extend: {},
   },
   plugins: [
     require('daisyui'),
