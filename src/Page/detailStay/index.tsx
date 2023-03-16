@@ -13,15 +13,18 @@ import { useCookies } from 'react-cookie';
 import { Rating } from '@smastrom/react-rating';
 import { FaChevronCircleLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { formatValue } from 'react-currency-input-field';
 
 const DetailStay = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['session']);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const [totalPrice, setTotalPrice] = useState(0)
 
   // Get stay ID from url
   const { stayId } = useParams();
   const [stay, setStay] = useState(stays.find(({ id }) => id === parseInt(stayId || "")));
+
 
   // API
   const endpoint = "https://baggioshop.site"
@@ -32,10 +35,14 @@ const DetailStay = () => {
       })
       .then((res) => {
         setStay(res.data.data);
-        console.log(res.data.data);
       })
       .catch((err) => console.log(err));
   };
+
+  const daysBetween = (startDate: Date, endDate: Date) => {
+    const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+    return (Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1);
+  }
 
   const fetchReservations = async () => {
     try {
@@ -52,8 +59,10 @@ const DetailStay = () => {
           const endDate = new Date(reservation.date_end);
 
           // Get the number of days between start and end dates
-          const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-          const numDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          // const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+          // const numDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          const numDays = daysBetween(startDate, endDate);
 
           // Generate an array of dates from start to end
           return Array.from({ length: numDays }, (_, i) => {
@@ -85,7 +94,7 @@ const DetailStay = () => {
   // Date Picker
   const [reservations, setReservations] = useState<any>([]);
   const [reservedDates, setReservedDates] = useState<Date[]>()
-  const [dateRange, setDateRange] = useState([null, null]);
+  const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
 
   // Disable Date Range
@@ -118,8 +127,29 @@ const DetailStay = () => {
     setDateWarning(true);
   };
 
+  // Handle reserve
+  const handleReserve = () => {
+    axios.post(
+      `https://baggioshop.site/reservations`,
+      {
+        room_id: stay?.id,
+        date_start: dateRange[0].toISOString().slice(0, 10).replace(/-/g, '-'),
+        date_end: dateRange[1].toISOString().slice(0, 10).replace(/-/g, '-'),
+        total_price: totalPrice
+      },
+      { headers: { Authorization: `Bearer ${cookies.session}`, "Content-Type": "application/json" } })
+      .then(result => {
+        console.log(result);
+        window.open(result.data.data.payment_link);
+        navigate("/trip")
+      })
+      .catch(error => console.log(error))
+
+  }
+
+  // Use Effect
   useEffect(() => {
-    // fetchDetails();
+    fetchDetails();
     fetchReservations();
 
     if (dateWarning) {
@@ -167,22 +197,110 @@ const DetailStay = () => {
 
           </div>
 
-          <div className='col-span-1 bg-primary rounded-lg hidden md:flex flex-col items-center py-4 px-4'>
+          <div className='col-span-1 bg-primary rounded-lg hidden md:flex gap-2 flex-col items-center py-4 px-4'>
             <h2 className='font-semibold text-2xl mb-4 text-accent'>Reserve Now</h2>
-            <div className='flex w-full justify-between items-center'>
-              <p className='font-semibold'>Rp. {stay?.price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")} <span className='font-light text-xs'>/night</span></p>
+
+            <h2 className="flex w-full justify-between items-center">
+              <p className='font-semibold'>Hello {stay?.location}</p>
               <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
+            </h2>
+
+            <DatePicker
+              className="input input-ghost bg-base-100 w-full"
+              placeholderText='Set reservation date'
+              selectsRange={true}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={(update: any) => {
+                setDateRange(update);
+
+                if (update[1] != null) {
+                  // const chosenDates = update.map((date: Date) => date.toISOString().substring(0, 10));
+                  const chosenDates = getDatesInRange(update[0], update[1])
+                  console.log("chosen: ", chosenDates)
+                  console.log("reserved: ", reservedDates)
+                  if (stay?.price && (reservedDates === undefined || (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates)))) {
+                    console.log("true")
+                    setDateRange(update);
+                    setTotalPrice(stay?.price * (daysBetween(update[0], update[1]) - 1))
+
+                  } else {
+                    handleWarning();
+                    console.log("false");
+                    setDateRange([null, null]);
+                  }
+                }
+
+              }}
+              dateFormat="d MMM yyyy"
+              minDate={new Date()}
+              excludeDates={reservedDates}
+              isClearable={true}
+              clearButtonClassName="btn btn-ghost"
+            />
+
+            <div className='flex flex-col w-full'>
+              <div
+                className={`${dateWarning
+                  ? 'opacity-100 transition-opacity duration-500'
+                  : 'opacity-0 hidden transition-opacity duration-500'
+                  } alert alert-warning shadow-lg w-full`}
+              >
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                  <span>Invalid Date</span>
+                </div>
+              </div>
+
+              <div className={`${dateWarning
+                ? 'opacity-0 transition-opacity duration-500 hidden'
+                : 'opacity-100 transition-opacity duration-500'
+                } flex items-center justify-between w-full`}>
+
+                <div>
+                  <p>{formatValue({
+                    value: JSON.stringify(stay?.price),
+                    groupSeparator: '.',
+                    decimalSeparator: ',',
+                    prefix: 'Rp. ',
+                  })}
+                    {dateRange[0] !== null && dateRange[1] !== null ?
+                      ` x  ${daysBetween(dateRange[0], dateRange[1]) - 1} nights` :
+                      " /night"}
+                  </p>
+                  {dateRange[1] !== null ?
+                    <>
+                      <p className='font-semibold'>
+                        {"Total: "}
+                        {formatValue({
+                          value: JSON.stringify(totalPrice),
+                          groupSeparator: '.',
+                          decimalSeparator: ',',
+                          prefix: 'Rp. ',
+                        })}
+                      </p>
+                    </> :
+                    <></>
+                  }
+                </div>
+
+                {dateRange[1] !== null ?
+                  <button onClick={handleReserve} className='btn btn-accent'>Reserve</button> :
+                  <button disabled className='btn btn-accent'>Reserve</button>
+                }
+              </div>
             </div>
+
           </div>
         </div>
 
       </div>
 
 
-      <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 my-2'>
+      <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 mt-2 mb-30 md:mb-2'>
         <div>
           <h1 className='md:hidden text-2xl font-semibold mb-2'>{stay?.name}</h1>
-          <h2 className="flex justify-begin gap-2 items-center">
+          <h2 className="md:hidden flex justify-begin gap-2 items-center">
             <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
             <p className='font-semibold'>{stay?.location}</p>
           </h2>
@@ -196,70 +314,99 @@ const DetailStay = () => {
             Show More
           </button>
         </div>
-
-        <DatePicker
-          className="input input-primary bg-primary w-full"
-          placeholderText='Set reservation date'
-          selectsRange={true}
-          startDate={startDate}
-          endDate={endDate}
-          onChange={(update: any) => {
-            setDateRange(update);
-
-            if (update[1] != null) {
-              // const chosenDates = update.map((date: Date) => date.toISOString().substring(0, 10));
-              const chosenDates = getDatesInRange(update[0], update[1])
-              console.log("chosen: ", chosenDates)
-              console.log("reserved: ", reservedDates)
-              if (reservedDates === undefined || (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates))) {
-                console.log("true")
-                setDateRange(update);
-
-              } else {
-                handleWarning();
-                console.log("false");
-                setDateRange([null, null]);
-              }
-            }
-
-          }}
-          dateFormat="d MMM yyyy"
-          minDate={new Date()}
-          excludeDates={reservedDates}
-          isClearable={true}
-          clearButtonClassName="btn btn-ghost"
-        />
       </div>
 
-      <div className='flex justify-center static m-0 w-screen border-t-4 border-primary py-4'>
-        <div
-          className={`${dateWarning
-            ? 'opacity-100 transition-opacity duration-500'
-            : 'opacity-0 hidden transition-opacity duration-500'
-            } alert alert-warning shadow-lg w-10/12`}
-        >
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-            <span>Invalid Date</span>
-          </div>
-        </div>
+      <div className='md:hidden h-30 flex fixed justify-center gap-2 bottom-0 w-screen border-t-4 border-primary bg-base-100'>
+        <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 my-4'>
+          <DatePicker
+            className="input input-primary bg-primary w-full"
+            placeholderText='Set reservation date'
+            selectsRange={true}
+            startDate={startDate}
+            endDate={endDate}
+            onChange={(update: any) => {
+              setDateRange(update);
 
-        <div className={`${dateWarning
-          ? 'opacity-0 transition-opacity duration-500 hidden'
-          : 'opacity-100 transition-opacity duration-500'
-          } flex items-center justify-between w-10/12`}>
-          <div>
-            {dateRange[1] !== null ?
-              <p>{formatDate(dateRange[0] || new Date())} - {formatDate(dateRange[1] || new Date())}</p> :
-              <></>
-            }
+              if (update[1] != null) {
+                // const chosenDates = update.map((date: Date) => date.toISOString().substring(0, 10));
+                const chosenDates = getDatesInRange(update[0], update[1])
+                console.log("chosen: ", chosenDates)
+                console.log("reserved: ", reservedDates)
+                if (stay?.price && (reservedDates === undefined || (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates)))) {
+                  console.log("true")
+                  setDateRange(update);
+                  setTotalPrice(stay?.price * (daysBetween(update[0], update[1]) - 1))
 
-            <p>Rp. {stay?.price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")}/night</p>
+                } else {
+                  handleWarning();
+                  console.log("false");
+                  setDateRange([null, null]);
+                }
+              }
+
+            }}
+            dateFormat="d MMM yyyy"
+            minDate={new Date()}
+            excludeDates={reservedDates}
+            isClearable={true}
+            clearButtonClassName="btn btn-ghost"
+          />
+
+
+          <div className='flex justify-center'>
+            <div
+              className={`${dateWarning
+                ? 'opacity-100 transition-opacity duration-500'
+                : 'opacity-0 hidden transition-opacity duration-500'
+                } alert alert-warning shadow-lg w-full`}
+            >
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <span>Invalid Date</span>
+              </div>
+            </div>
+
+            <div className={`${dateWarning
+              ? 'opacity-0 transition-opacity duration-500 hidden'
+              : 'opacity-100 transition-opacity duration-500'
+              } flex items-center justify-between w-full`}>
+
+              <div>
+                <p>{formatValue({
+                  value: JSON.stringify(stay?.price),
+                  groupSeparator: '.',
+                  decimalSeparator: ',',
+                  prefix: 'Rp. ',
+                })}
+                  {dateRange[0] !== null && dateRange[1] !== null ?
+                    ` x  ${daysBetween(dateRange[0], dateRange[1]) - 1} nights` :
+                    " /night"}
+                </p>
+                {dateRange[1] !== null ?
+                  <>
+                    <p className='font-semibold'>
+                      {"Total: "}
+                      {formatValue({
+                        value: JSON.stringify(totalPrice),
+                        groupSeparator: '.',
+                        decimalSeparator: ',',
+                        prefix: 'Rp. ',
+                      })}
+                    </p>
+                  </> :
+                  <></>
+                }
+              </div>
+
+              {dateRange[1] !== null ?
+                <button onClick={handleReserve} className='btn btn-accent'>Reserve</button> :
+                <button disabled className='btn btn-accent'>Reserve</button>
+              }
+            </div>
           </div>
-          {dateRange[1] !== null ?
-            <button className='btn btn-accent'>Reserve</button> :
-            <button disabled className='btn btn-accent'>Reserve</button>
-          }
+
+
+
 
         </div>
 
