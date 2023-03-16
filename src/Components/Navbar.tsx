@@ -80,36 +80,42 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
     }, [endpoint]);
 
     return (
-        <div className="navbar w-screen bg-base-100 shadow-md z-10 top-0 sticky text-white border-b-2 border-primary">
-            <div className="flex-1 ml-1 space-x-4">
-                <button onClick={() => navigate(-1)} className="ml-1 text-3xl text-white hover:text-accent">
-                    <FaChevronCircleLeft />
-                </button>
-                <div className="flex w-60 justify-center">
+        <div className="navbar w-screen bg-base-100 shadow-md z-10 top-0 sticky text-white border-b-2 border-primary justify-center">
+            <div className='flex gap-4 flex-between justify-center w-10/12 max-w-screen-lg'>
+                <div>
+                    <button onClick={() => navigate(-1)} className="md:hidden text-4xl text-white hover:text-accent">
+                        <FaChevronCircleLeft />
+                    </button >
+
+                    <button onClick={() => navigate("/home")} className="font-semibold hidden md:flex text-4xl text-white hover:text-accent">
+                        <h1>AltaBnB</h1>
+                    </button >
+
+                </div>
+                <div className="flex w-full justify-center">
                     {children}
                 </div>
-            </div>
-            <div className="flex-none space-x-5">
-                <div tabIndex={0} className="dropdown dropdown-end">
-                    <div className="avatar">
-                        <div className="w-8 sm:w-12 rounded-full">
-                            <img src={img} />
-                        </div>
-                    </div>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
-                        <li onClick={() => navigate('/profile_host')}><a>
-                            <HiCog6Tooth />
-                            Profile
-                        </a>
-                        </li>
-                        <li onClick={handleLogout}><a>
-                            <FaSignOutAlt />
-                            Sign Out
-                        </a>
-                        </li>
-                    </ul>
-                </div>
 
+                <div className="flex-none">
+                    <div className="dropdown dropdown-end">
+                        <label tabIndex={0} className="">
+                            <img src={img} className='rounded-full w-10 h-10 hover:border-2 hover:border-accent hover:cursor-pointer' alt="" />
+                        </label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
+                            <li onClick={() => navigate('/profile_host')}><a>
+                                <HiCog6Tooth />
+                                Profile
+                            </a>
+                            </li>
+                            <li onClick={handleLogout}><a>
+                                <FaSignOutAlt />
+                                Sign Out
+                            </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         </div>
     )

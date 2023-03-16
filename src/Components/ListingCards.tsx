@@ -36,10 +36,10 @@ const ListingCards: React.FC<ListingProps> = ({
     const navigate = useNavigate()
 
     return (
-        <div className='flex relative justify-center w-72 mx-auto p-5'>
-            <button onClick={() => navigate(`/stays/${id}`)} className="card w-72 bg-primary shadow-xl p-0">
-                <figure className='w-72 h-40'>
-                    <img src={image} className='w-full h-full' alt="image not found" />
+        <div className='flex relative justify-center w-full mx-auto'>
+            <button onClick={() => navigate(`/stays/${id}`)} className="card w-full bg-primary shadow-xl p-0">
+                <figure>
+                    <img className='object-cover w-screen h-60' src={image} alt="image not found" />
                 </figure>
                 <div className="card-body p-0 py-5 mx-5">
                     <h2 className="card-title text-lg justify-between w-full">
