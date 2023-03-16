@@ -31,7 +31,7 @@ function App() {
           <Route path='/stays/:stayId' element={<DetailStay/>} />
           <Route path='/payment' element={<Payment/>} />
           <Route path='/edit_bnb' element={<EditBnb/>} />
-          <Route path='/list_bnb' element={<Listing/>} />
+          <Route path='/list_bnb/:id' element={<Listing/>} />
           <Route path='/trip' element={<Trip/>} />
         </Routes>
       </BrowserRouter>
