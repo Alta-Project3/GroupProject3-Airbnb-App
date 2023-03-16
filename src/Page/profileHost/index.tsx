@@ -217,7 +217,6 @@ const ProfileHost = () => {
     return (
         <Layout>
             <Navbar />
-
             <div className='md:bg-primary w-screen flex flex-col h-screen justify-between items-center'>
                 <div className="text-white mt-10 w-9/12 flex flex-col sm:justify-center">
                     <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-center'>Personal Information</h1>
@@ -314,7 +313,6 @@ const ProfileHost = () => {
                     id={data.id}
                 />
             </Modal>
-
             <Modal
                 isOpen={showEdit}
                 size='w-full h-full sm:w-10/12 sm:h-5/6'
