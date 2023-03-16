@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import axios from "axios"
+import Swal from 'sweetalert2'
 
 import Layout from '../../Components/Layout'
 import Navbar from '../../Components/Navbar'
@@ -8,8 +9,14 @@ import Button from '../../Components/Button'
 import Modal from '../../Components/Modal'
 import Input from '../../Components/Input'
 import TextArea from '../../Components/TextArea'
+import ListingModal,{ ListingFormValues } from '../../Components/ListingModal'
+
+import { useCookies } from 'react-cookie'
 
 import { FaCloudUploadAlt } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom'
+
+
 
 
 
@@ -22,22 +29,162 @@ const Listing = () => {
   const [showEdit, setShowEdit] = useState(false)
   const [showBnb, setShowBnb] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
+  const [cookies, setCookie, removeCookie] = useCookies(['session']);
+  const [loading, setLoading] = useState(false)
+  const [room, setRooms] = useState([])
+  const location = useLocation()
+  const [lat, setLat] = useState(0)
+  const [lon, setLon] = useState(0)
+  
+  
+  const endpoint = `https://baggioshop.site/users`
+  
+  const id = location.state.id
+  
+  const fetchRoomData = async () => {
+    try {
+      const response = await axios.get(
+        `${endpoint}/${location?.state?.id}/rooms`,
+        { headers: { Authorization: `Bearer ${cookies.session}` } }
+        );
+        console.log("room data: ", response.data.data);
+        setRooms(response.data.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(true);
+    }
+  };
 
   useEffect(() => {
-    axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=51.52016005&lon=-0.16030636023550826&apiKey=71097a12eab542b5b01173f273f24c96`)
-      .then(response => {
-        console.log("from Geometry", response.data);
-      }).catch(error => {
-        console.log(error);
-      });
-    axios.get(`https://api.geoapify.com/v1/geocode/search?text=Gedung%20Sate,%20Bandung%20Indonesia&apiKey=71097a12eab542b5b01173f273f24c96`)
-      .then(response => {
-        console.log("From Address", response.data);
-      }).catch(error => {
-        console.log(error);
-      });
-  }, [])
+    fetchRoomData();
+  }, [endpoint]);
   
+  
+  // useEffect(() => {
+    //   axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=51.52016005&lon=-0.16030636023550826&apiKey=71097a12eab542b5b01173f273f24c96`)
+    //     .then(response => {
+      //       console.log("from Geometry", response.data);
+  //     }).catch(error => {
+  //       console.log(error);
+  //     });
+  //   axios.get(`https://api.geoapify.com/v1/geocode/search?text=Gedung%20Sate,%20Bandung%20Indonesia&apiKey=71097a12eab542b5b01173f273f24c96`)
+  //     .then(response => {
+  //       console.log("From Address", response.data);
+  //     }).catch(error => {
+    //       console.log(error);
+  //     });
+  //   }, [])
+
+    const roomEndpoint = `https://baggioshop.site/rooms`
+
+    const handleDeleteRoom = (id:any) => {
+      Swal.fire({
+        title: `Are you sure delete this room ?`,
+          text: "You will not be able to recover your data!",
+          icon: "warning",
+          iconColor: '#FDD231',
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          color: '#ffffff',
+          background: '#0B3C95 ',
+          confirmButtonColor: "#FDD231",
+          cancelButtonColor: "#FE4135",
+      }).then((willDelete) => {
+          if(willDelete.isConfirmed) {
+              axios.delete(`https://baggioshop.site/rooms/${id}`,{
+                  headers:{
+                      Authorization: `Bearer ${cookies.session}`,
+                      Accept: 'application/json'
+                  }
+              }).then((response)=> {
+                  Swal.fire({
+                      position: 'top-start',
+                      icon: 'success',
+                      iconColor: '#FDD231',
+                      padding: '1em',
+                      title: 'Successfuly Delete Room',
+                      color: '#ffffff',
+                      background: '#0B3C95 ',
+                      showConfirmButton: false,
+                      timer: 1200
+                  })
+                  fetchRoomData()
+              })
+          }
+      })
+  }
+  const initialListingFormValues: ListingFormValues = {
+    name: "",
+    address: "",
+    latitude: 0,
+    longitude: 0,
+    description: "",
+    price: "",
+};
+
+const myKey = '71097a12eab542b5b01173f273f24c96'
+
+const handleNewListing = (formValues: ListingFormValues) => {
+    console.log(formValues)
+    setLoading(true);
+    axios.get(`https://api.geoapify.com/v1/geocode/search?text=${formValues.address}&apiKey=${myKey}`)
+    .then(response => {
+        setLat(response.data.features[0].properties.lat)
+        setLon(response.data.features[0].properties.lon)
+        console.log("lat", response.data.features[0].properties.lat);
+        console.log("lon", response.data.features[0].properties.lon);
+        axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${response.data.features[0].properties.lat}&lon=${response.data.features[0].properties.lon}&apiKey=${myKey}`)
+        .then(response => {
+            const formData = new FormData();
+            formData.append('file', formValues.file);
+            axios.post(roomEndpoint,
+                {
+                    user_id : id,
+                    room_name : formValues.name,
+                    price : formValues.price,
+                    description : formValues.description,
+                    latitude : response.data.features[0].properties.lat,
+                    longitude : response.data.features[0].properties.lon,
+                    address : response.data.features[0].properties.city,
+                    room_picture : formData
+                },
+                { headers: { 
+                    Authorization: `Bearer ${cookies.session}`,
+                    Accept: 'application/json',
+                    "Content-Type" : 'multipart/form-data'
+                }
+            }
+            )
+            .then(result => {
+                console.log("Form submitted with values: ", result)
+                setShowBnb(false)
+                fetchRoomData()
+            })
+            .catch((error) => {
+            Swal.fire({
+                title: "Failed",
+                icon: "error",
+                iconColor: '#FDD231',
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                color: '#ffffff',
+                background: '#0B3C95 ',
+                confirmButtonColor: "#FDD231",
+                cancelButtonColor: "#FE4135",
+            })
+            console.log(error)
+            })
+            .finally(() => setLoading(false));
+        }).catch(error => {
+            console.log(error);
+        });
+    }).catch(error => {
+        console.log(error);
+    })
+}
 
   return (
     <Layout>
@@ -45,45 +192,27 @@ const Listing = () => {
       children={<h1 className="font-bold text-2xl">Your Listings</h1>}
       />
         <div className="flex flex-col mt-4 gap-10 w-full justify-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4">
-        <ListingCards
-          id={1}
-          location='Bogor, Indonesia'
-          rating={4.5}
-          available="Apr 10 - 15"
-          price={2500000}
-          image="https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/t_htl-dskt/tix-hotel/images-web/2021/03/12/c787bd29-4af1-4a4a-971f-a0df8cadaee7-1615563884519-157817001f6a78b890369fcbb737fc07.jpg"
-          handleEdit={()=> setShowEdit(true)}
-          edit={true}
-          toDelete={true}
-          handleDelete={() => setShowDelete(true)}
-        />
-
-        <ListingCards
-          id={1}
-          location='Bogor, Indonesia'
-          rating={4.7}
-          available="Apr 20 - 29"
-          price={1700000}
-          image="https://www.amesbostonhotel.com/wp-content/uploads/2021/09/Rekomendasi-Penginapan-Villa-di-Bogor.jpg"
-          handleEdit={()=> setShowEdit(true)}
-          toDelete={true}
-          handleDelete={() => setShowDelete(true)}
-          edit={true}
-        />
-
-        <ListingCards
-          id={1}
-          location='Bogor, Indonesia'
-          rating={4.7}
-          available="Apr 20 - 29"
-          price={1700000}
-          image="https://www.amesbostonhotel.com/wp-content/uploads/2021/09/Rekomendasi-Penginapan-Villa-di-Bogor.jpg"
-          handleEdit={()=> setShowEdit(true)}
-          toDelete={true}
-          handleDelete={() => setShowDelete(true)}
-          edit={true}
-        />
-
+        { room && loading === true ?(
+          room.map((item:any, index:any)=> {
+            return(
+              <ListingCards
+              key={item.id}
+              id={item.id}
+              location={item.address}
+              rating={item.rating}
+              available={item.available}
+              price={item.price}
+              image={item.room_picture}
+              handleEdit={()=> setShowEdit(true)}
+              toDelete={true}
+              handleDelete={()=>handleDeleteRoom(item.id)}
+              edit={true}
+              />
+            )
+          })
+        ) : (
+          <h1>Loading</h1>
+        )        }
         <ListingCards
           id={1}
           location='Bogor, Indonesia'
@@ -113,52 +242,11 @@ const Listing = () => {
             size='w-full h-full sm:h-5/6 sm:w-8/12 md:w-96'
             isClose={()=> setShowBnb(false)}
             >
-                <div className="flex justify-center">
-                    <form className='flex flex-col w-60 sm:w-80'>
-                        <Input
-                            type='text'
-                            label='Name'
-                            name='name'
-                            placeholder='set room name'
-                        />
-                        <TextArea
-                            label='Address'
-                            name='address'
-                            placeholder='enter home address'
-                        />
-                        <TextArea
-                            label='Description'
-                            name='description'
-                            placeholder='enter your home descrption'
-                        />
-                        <Input
-                            type='number'
-                            label='Price'
-                            name='price'
-                            placeholder='Rp.250.000.00 /nigth'
-                        />
-
-                        <div className="flex flex-col justify-center w-full mt-2">
-                            <label htmlFor="">
-                                Your Home Photos
-                            </label>
-                            <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-30  rounded-lg cursor-pointer bg-primary dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <FaCloudUploadAlt className='text-6xl text-gray-400'/>
-                                    <p className="mb-2 text-sm text-gray-400 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p className="text-xs text-gray-400 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                </div>
-                                <input type="file" className="hidden" />
-                            </label>
-                        </div> 
-
-                        <Button
-                        color="btn-accent"
-                        size='mt-5'
-                        children={"Save"}
-                        />
-                    </form>
-                </div>
+              <ListingModal
+                    onSubmit={handleNewListing}
+                    initialFormValues={initialListingFormValues}
+                    editMode={false}
+                />
             </Modal>
 
         <Modal
@@ -167,76 +255,13 @@ const Listing = () => {
             size='w-full h-full sm:h-5/6 sm:w-8/12 md:w-96'
             isClose={()=> setShowEdit(false)}
             >
-                <div className="flex justify-center">
-                    <form className='flex flex-col w-60 sm:w-80'>
-                        <Input
-                            type='text'
-                            label='Name'
-                            name='name'
-                            placeholder='Villa Boscha'
-                        />
-                        <TextArea
-                            label='Address'
-                            name='address'
-                            placeholder='Jl. Boscha V No.80, Pasteur, Kec. Sukajadi, Kota Bandung, Jawa Barat 40161'
-                        />
-                        <TextArea
-                            label='Description'
-                            name='description'
-                            placeholder='It is a luxury Bali resort style villa located close to Bogor Taman Safari.  private garden with  private swimming pool can be used independently. It is a beautiful....'
-                        />
-                        <Input
-                            type='number'
-                            label='Price'
-                            name='price'
-                            placeholder='Rp.250.000.00 /nigth'
-                        />
-
-                        <div className="flex flex-col justify-center w-full mt-2">
-                            <label htmlFor="">
-                                Your Home Photos
-                            </label>
-                            <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-30  rounded-lg cursor-pointer bg-primary dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <FaCloudUploadAlt className='text-6xl text-gray-400'/>
-                                    <p className="mb-2 text-sm text-gray-400 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p className="text-xs text-gray-400 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                </div>
-                                <input type="file" className="hidden" />
-                            </label>
-                        </div> 
-
-                        <Button
-                        color="btn-accent"
-                        size='mt-5'
-                        children={"Save"}
-                        />
-                    </form>
-                </div>
+                <ListingModal
+                    onSubmit={handleNewListing}
+                    initialFormValues={initialListingFormValues}
+                    editMode={true}
+                />
             </Modal>
 
-            <Modal
-                isOpen={showDelete}
-                isClose={() => setShowDelete(false)}
-                size='w-80'
-            >
-                <div className="flex flex-col justify-center">
-                    <h1 className='text-2xl text-center'>Are You Sure To Delete this Room ?</h1>
-                    <div className="flex flex-row justify-center space-x-4">
-                        <Button
-                        color="btn-warning"
-                        size='mt-5'
-                        children={"Cancel"}
-                        />
-                        <Button
-                        color="btn-accent"
-                        size='mt-5'
-                        children={"Yes, I Sure"}
-                        />
-                    </div>
-                    
-                </div>
-            </Modal>
     </Layout>
   )
 }
