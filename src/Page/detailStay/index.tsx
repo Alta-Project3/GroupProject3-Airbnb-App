@@ -211,7 +211,7 @@ const DetailStay = () => {
               const chosenDates = getDatesInRange(update[0], update[1])
               console.log("chosen: ", chosenDates)
               console.log("reserved: ", reservedDates)
-              if (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates)) {
+              if (reservedDates === undefined || (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates))) {
                 console.log("true")
                 setDateRange(update);
 
