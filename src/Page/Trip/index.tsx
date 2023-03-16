@@ -15,6 +15,7 @@ import { Rating } from '@smastrom/react-rating'
 import { FaStar } from 'react-icons/fa'
 import TextArea from '../../Components/TextArea'
 import Input from '../../Components/Input'
+import Loading from '../../Components/Loading'
 
 interface FormValues {
   comment: string;
@@ -230,7 +231,7 @@ const Trip = () => {
               )
             })
           ) : (
-            <h1>Loading</h1>
+            <Loading/>
           )}
         </div>
       </div>

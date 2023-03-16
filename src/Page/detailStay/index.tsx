@@ -15,6 +15,7 @@ import { FaChevronCircleLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { formatValue } from 'react-currency-input-field';
 import CommentCard from '../../Components/CommentCard';
+import Loading from '../../Components/Loading';
 
 const DetailStay = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['session']);
@@ -26,6 +27,7 @@ const DetailStay = () => {
   const { stayId } = useParams();
   const [stay, setStay] = useState(stays.find(({ id }) => id === parseInt(stayId || "")));
   const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(false)
 
 
   // API
@@ -36,6 +38,7 @@ const DetailStay = () => {
         headers: { Authorization: `Bearer ${cookies.session}` },
       })
       .then((res) => {
+        setLoading(true)
         setStay(res.data.data);
       })
       .catch((err) => console.log(err));
@@ -48,6 +51,7 @@ const DetailStay = () => {
       })
       .then((res) => {
         setComments(res.data.data);
+        setLoading(true)
       })
       .catch((err) => console.log(err));
   };
@@ -195,6 +199,7 @@ const DetailStay = () => {
 
         </Navbar>
       </div>
+      {stay && loading === true ?(
 
       <div className='flex flex-col justify-center w-screen md:w-10/12 max-w-screen-lg'>
         <h1 className='hidden text-accent md:flex text-4xl font-bold my-4'>{stay?.room_name}</h1>
@@ -317,6 +322,9 @@ const DetailStay = () => {
         </div>
 
       </div>
+      ):(
+        <Loading/>
+      )}
 
 
       <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 mt-2 mb-40 md:mb-2'>
@@ -341,7 +349,8 @@ const DetailStay = () => {
 
 
           <div className='flex flex-col gap-2'>
-            {comments.map((comment: any) => {
+          {comments && loading === true ?(
+            comments.map((comment: any) => {
               return (
                 <CommentCard
                   key={comment.id}
@@ -353,7 +362,10 @@ const DetailStay = () => {
                   comment={comment.feedback}
                 />
               )
-            })}
+            })
+          ):(
+              <Loading/>
+          )}
             {/* <CommentCard
               id={2}
               user="Mus"
