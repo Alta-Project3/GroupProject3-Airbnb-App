@@ -207,7 +207,14 @@ const DetailStay = () => {
               </button>
             </div>
 
-            <img className='md:rounded-lg md:shadow-lg object-cover w-full h-60 md:h-96' src={stay?.room_picture} alt="image" />
+            <img
+              className='md:rounded-lg md:shadow-lg object-cover w-full h-60 md:h-96'
+              src={stay?.room_picture}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = "https://www.nj.com/resizer/QgEkPOPu3r2bkqGAf7DjtCH7sJM=/1280x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/HK5EHPHYX5CR7BS2E5TGVHZBGE.JPG";
+              }}
+            />
 
           </div>
 
@@ -331,12 +338,13 @@ const DetailStay = () => {
           </button>
 
           {comments.length == 0 ? <></> : <h2 className='font-semibold text-accent mt-4'>Reviews</h2>}
-          
+
 
           <div className='flex flex-col gap-2'>
             {comments.map((comment: any) => {
               return (
                 <CommentCard
+                  key={comment.id}
                   id={comment.id}
                   user={comment.user_name}
                   image={comment.user_profile_picture}
