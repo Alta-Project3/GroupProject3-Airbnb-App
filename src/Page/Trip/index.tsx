@@ -293,9 +293,6 @@ const Trip = () => {
                 setEditFormValues((prevData) => ({ ...prevData, rating: selectedValue }))
               }
             />
-            <button type="button" onClick={() => setFeedback(rating === 0)}>
-              Reset
-            </button>
             <Button
               color="btn-accent"
               size='mt-5'

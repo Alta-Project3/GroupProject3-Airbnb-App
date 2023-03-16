@@ -105,7 +105,7 @@ const ListingModal: React.FC<ListingProps> = ({ id }) => {
                                         }
                                     })
                                     Swal.fire({
-                                        position: 'top-start',
+                                        position: 'center',
                                         icon: 'success',
                                         iconColor: '#FDD231',
                                         padding: '1em',

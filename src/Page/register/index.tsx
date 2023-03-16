@@ -56,7 +56,7 @@ const Register = () => {
     .then((result)=> {
       console.log("new user", result)
       Swal.fire({
-        position: 'top-start',
+        position: 'center',
         icon: 'success',
         iconColor: '#FDD231',
         padding: '1em',

@@ -125,6 +125,7 @@ const ProfileHost = () => {
                     showConfirmButton: false,
                     timer: 2000
                 })
+                window.location.reload()
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
@@ -310,7 +311,7 @@ const ProfileHost = () => {
             <Modal
                 title='Set your BnB'
                 isOpen={showBnb}
-                size='w-full h-full sm:h-5/6 sm:w-10/12 md:w-10/12'
+                size='w-full h-full sm:w-10/12 md:w-6/12 lg:w-5/12 sm:max-w-96 sm:h-4/6'
                 isClose={() => setShowBnb(false)}
             >
                 {loading === true ?(
@@ -323,7 +324,7 @@ const ProfileHost = () => {
             </Modal>
             <Modal
                 isOpen={showEdit}
-                size='w-full h-full sm:w-10/12 sm:h-5/6'
+                size='w-full h-full sm:w-10/12 md:w-6/12 lg:w-5/12 sm:max-w-96 sm:h-4/6'
                 isClose={() => setShowEdit(false)}
             > 
                 {loading === true ?(

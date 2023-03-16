@@ -107,7 +107,7 @@ const Listing = () => {
           }
         }).then((response) => {
           Swal.fire({
-            position: 'top-start',
+            position: 'center',
             icon: 'success',
             iconColor: '#FDD231',
             padding: '1em',
@@ -389,7 +389,7 @@ const Listing = () => {
       <Modal
         title='Set Your bnb'
         isOpen={showBnb}
-        size='w-full h-full sm:w-10/12 sm:h-5/6'
+        size='w-full h-full sm:w-10/12 md:w-6/12 lg:w-5/12 sm:max-w-96 sm:h-4/6'
         isClose={() => setShowBnb(false)}
       >
         { loading === true ? ( 
@@ -459,7 +459,7 @@ const Listing = () => {
       <Modal
         title='Edit Your bnb'
         isOpen={showEdit}
-        size='w-full h-full sm:w-10/12 sm:h-5/6'
+        size='w-full h-full sm:w-10/12 md:w-6/12 lg:w-5/12 sm:max-w-96 sm:h-4/6'
         isClose={() => setShowEdit(false)}
       > 
         {loading === true ? (
