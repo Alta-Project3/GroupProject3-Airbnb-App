@@ -13,9 +13,10 @@ interface NavbarProps {
     name?: string
     handleProfile?: React.MouseEventHandler;
     children?: React.ReactNode
+    imgUser?: string
 }
 
-const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
+const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children, imgUser }) => {
 
 
     // handle log out
@@ -100,7 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
                 <div className="flex-none">
                     <div className="dropdown dropdown-end">
                         <label tabIndex={0} className="">
-                            <img src={img} className='rounded-full w-10 h-10 hover:border-2 hover:border-accent hover:cursor-pointer' alt="" />
+                            <img src={imgUser ? imgUser : img} className='rounded-full w-10 h-10 hover:border-2 hover:border-accent hover:cursor-pointer' alt="" />
                         </label>
                         <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
                             <li onClick={() => navigate('/profile_host')}><a>

@@ -100,7 +100,13 @@ const Home = () => {
           background: '#1b44a6',
           confirmButtonColor: "#FDD231",
           }).then((willFetch)=>{
-          window.location.reload()
+          if(willFetch.isConfirmed){
+            axios.get(`${filterEndpoint}rating=&date_start=&date_end=&price_min=&price_max=`,{
+              headers: { Authorization: `Bearer ${cookies.session}` }
+            }).then((response)=>{
+              setRooms(response.data.data);
+            })
+          }
         })
       }
     } catch (error) {

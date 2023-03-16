@@ -125,7 +125,7 @@ const ProfileHost = () => {
                     showConfirmButton: false,
                     timer: 2000
                 })
-                window.location.reload()
+                
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
@@ -218,7 +218,9 @@ const ProfileHost = () => {
 
     return (
         <Layout>
-            <Navbar />
+            <Navbar 
+            imgUser={data.profile_picture}
+            />
             <div className='md:bg-primary w-screen flex flex-col h-screen justify-between items-center'>
                 <div className="text-white mt-10 w-9/12 flex flex-col sm:justify-center">
                     <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-center'>Personal Information</h1>
