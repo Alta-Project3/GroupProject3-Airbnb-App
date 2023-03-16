@@ -24,46 +24,22 @@ const CommentCard: React.FC<CommentProps> = ({ id, user, image, date, rating, co
 
     };
 
-    // //Handle Profile Picture
-    // const [loading, setLoading] = React.useState(true)
-    // const [img, setImg] = React.useState<any>()
-    // const endpoint = `https://baggioshop.site/users`
-    // const [cookies, setCookie, removeCookie] = useCookies(['session']);
-
-    // const fetchDataUser = async () => {
-    //     try {
-    //         const response = await axios.get(endpoint, {
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 Authorization: `Bearer ${cookies.session}`
-    //             }
-    //         });
-    //         setImg(response.data.data.profile_picture)
-    //     } catch (error) {
-    //         console.error(error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchDataUser();
-    // }, [endpoint]);
-
     return (
         <div className="rounded-lg w-full bg-primary shadow-xl py-4 sm:px-10 px-2">
             <div className='flex gap-4'>
-                <img src={image} className='rounded-full w-20 h-20' alt="not found" />
-                <div>
-                    <div className='flex gap-2 items-center'>
-                        <h2 className="font-semibold text-lg">{user}</h2>
-                        <Rating
-                            value={rating}
-                            style={{ maxWidth: 100 }}
-                            itemStyles={customStyles}
-                            readOnly
-                        />
-                    </div>
+                <div className='flex flex-col gap-2'>
+                    <img src={image} className='rounded-full object-cover w-20 h-20' alt="not found" />
+                    <Rating
+                        value={rating}
+                        style={{ maxWidth: 80, minWidth: 80 }}
+                        itemStyles={customStyles}
+                        readOnly
+                    />
+
+                </div>
+
+                <div className='flex flex-col'>
+                    <h2 className="line-clamp-1 font-semibold">{user}</h2>
                     <p>{comment}</p>
                 </div>
             </div>
