@@ -18,7 +18,7 @@ import { FaPenSquare } from 'react-icons/fa'
 import { FaRoad } from 'react-icons/fa'
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { HiPencil } from 'react-icons/hi2';
-import {GiJourney} from 'react-icons/gi'
+import { GiJourney } from 'react-icons/gi'
 
 
 interface FormValues {
@@ -61,7 +61,7 @@ const ProfileHost = () => {
             const response = await axios.get(endpoint, {
                 headers: {
                     Accept: 'application/json',
-                    Authorization: `Bearer ${cookies.session}` 
+                    Authorization: `Bearer ${cookies.session}`
                 }
             });
             setData(response.data.data);
@@ -87,7 +87,7 @@ const ProfileHost = () => {
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
-        if(files){
+        if (files) {
             setFile(files[0]);
         };
     }
@@ -102,7 +102,8 @@ const ProfileHost = () => {
         formData.append("address", formValues.address);
         formData.append("profile_picture", file);
         axios.put(endpoint, formData,
-                { headers: { 
+            {
+                headers: {
                     Authorization: `Bearer ${cookies.session}`,
                     Accept: 'application/json',
                     "Content-Type": 'multipart/form-data'
@@ -113,7 +114,7 @@ const ProfileHost = () => {
                 fetchDataUser();
                 setShowEdit(false)
                 Swal.fire({
-                    position: 'top-start',
+                    // position: 'top-start',
                     icon: 'success',
                     iconColor: '#FDD231',
                     padding: '1em',
@@ -126,7 +127,7 @@ const ProfileHost = () => {
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
-    } 
+    }
 
     const handleUpgradeUser = () => {
         Swal.fire({
@@ -139,36 +140,36 @@ const ProfileHost = () => {
             background: '#0B3C95 ',
             confirmButtonColor: "#FDD231",
             cancelButtonColor: "#FE4135",
-        }).then((willUpgrade)=> {
-            if(willUpgrade.isConfirmed){
-                axios.post(`${endpoint}/upgrade`,{
+        }).then((willUpgrade) => {
+            if (willUpgrade.isConfirmed) {
+                axios.post(`${endpoint}/upgrade`, {
                     approvement: "yes",
                 },
-                {
-                    headers:{
-                        Authorization: `Bearer ${cookies.session}`,
-                        Accept: 'application/json',
-                        "Content-Type": 'application/json'
-                    }
-                })
-                .then((response)=> {
-                    console.log(response.data.data.role)
-                    setCookie('role', response.data.data.role, { path: "/" });
-                    Swal.fire({
-                        position: 'top-start',
-                        icon: 'success',
-                        iconColor: '#FDD231',
-                        padding: '1em',
-                        title: "You're Host Now",
-                        color: '#ffffff',
-                        background: '#0B3C95 ',
-                        showConfirmButton: false,
-                        timer: 2000
+                    {
+                        headers: {
+                            Authorization: `Bearer ${cookies.session}`,
+                            Accept: 'application/json',
+                            "Content-Type": 'application/json'
+                        }
                     })
-                    fetchDataUser()
-                })
-                .catch((error) =>{console.log(error)})
-                .finally(()=> setLoading(false))
+                    .then((response) => {
+                        console.log(response.data.data.role)
+                        setCookie('role', response.data.data.role, { path: "/" });
+                        Swal.fire({
+                            // position: 'top-start',
+                            icon: 'success',
+                            iconColor: '#FDD231',
+                            padding: '1em',
+                            title: "You're Host Now",
+                            color: '#ffffff',
+                            background: '#0B3C95 ',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                        fetchDataUser()
+                    })
+                    .catch((error) => { console.log(error) })
+                    .finally(() => setLoading(false))
             }
         })
     }
@@ -187,15 +188,15 @@ const ProfileHost = () => {
             confirmButtonColor: "#FDD231",
             cancelButtonColor: "#FE4135",
         }).then((willDelete) => {
-            if(willDelete.isConfirmed) {
-                axios.delete(endpoint,{
-                    headers:{
+            if (willDelete.isConfirmed) {
+                axios.delete(endpoint, {
+                    headers: {
                         Authorization: `Bearer ${cookies.session}`,
                         Accept: 'application/json'
                     }
-                }).then((response)=> {
+                }).then((response) => {
                     Swal.fire({
-                        position: 'top-start',
+                        // position: 'top-start',
                         icon: 'success',
                         iconColor: '#FDD231',
                         padding: '1em',
@@ -212,7 +213,7 @@ const ProfileHost = () => {
             }
         })
     }
-    
+
     return (
         <Layout>
             <Navbar />
@@ -250,11 +251,11 @@ const ProfileHost = () => {
                                 </p>
                             </div>
                             <div className='space-y-3'>
-                                <p className='text-sm font-semibold underline italic flex cursor-pointer' onClick={() => setShowEdit(true)}>
-                                <HiPencil className='mr-1 text-xl' />Edit Your Profile ?
+                                <p className='text-sm font-semibold underline italic flex hover:cursor-pointer hover:text-accent' onClick={() => setShowEdit(true)}>
+                                    <HiPencil className='mr-1 text-xl' />Edit Your Profile
                                 </p>
-                                <p className='text-sm font-semibold underline italic flex cursor-pointer' onClick={() => navigate('/trip')}>
-                                <GiJourney className='text-xl mr-1' />See Your Trip
+                                <p className='text-sm font-semibold underline italic flex hover:cursor-pointer hover:text-accent' onClick={() => navigate('/trip')}>
+                                    <GiJourney className='text-xl mr-1'/>See Your Trips
                                 </p>
                             </div>
                         </div>
@@ -273,24 +274,26 @@ const ProfileHost = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col w-5/6 mt-10 space-y-3 sm:items-center md:ml-10">
-                        <Button
-                            color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
-                            size={`sm:w-60 sm:btn-sm  ${cookies.role === Role ? 'static' : 'hidden'}`}
-                            children={'View Your List Bnb'}
-                            onClick={() => navigate(`/list_bnb/${data.id}`,{
-                                    state:{
+                    <div className="flex flex-col mt-10 space-y-3 sm:items-center md:ml-10">
+                        <div className='grid sm:grid-cols-2 gap-4'>
+                            <Button
+                                color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
+                                size={`sm:w-60 sm:btn-sm  ${cookies.role === Role ? 'static' : 'hidden'}`}
+                                children={'View your listed Bnbs'}
+                                onClick={() => navigate(`/list_bnb/${data.id}`, {
+                                    state: {
                                         id: data.id
                                     }
                                 }
-                            )}
-                        />
-                        <Button
-                            color='btn-accent'
-                            size='sm:w-60 sm:btn-sm sm:text-xs'
-                            children={cookies.role === Role ? 'Create New Bnb' : 'Make your home Bnb ?'}
-                            onClick={cookies.role === Role ? () => setShowBnb(true) : handleUpgradeUser}
-                        />
+                                )}
+                            />
+                            <Button
+                                color='btn-accent'
+                                size='sm:w-60 sm:btn-sm sm:text-xs'
+                                children={cookies.role === Role ? 'Create A New BnB' : 'Make your home Bnb ?'}
+                                onClick={cookies.role === Role ? () => setShowBnb(true) : handleUpgradeUser}
+                            />
+                        </div>
                     </div>
                     <div className="flex w-5/6 mt-20 mb-10 sm:justify-center">
                         <Button
@@ -302,9 +305,9 @@ const ProfileHost = () => {
                 </div>
             </div>
             <Modal
-                title='Set Your bnb'
+                title='Set your BnB'
                 isOpen={showBnb}
-                size='w-full h-full sm:h-5/6 sm:w-8/12 md:w-96'
+                size='w-full h-full sm:h-5/6 sm:w-10/12 md:w-10/12'
                 isClose={() => setShowBnb(false)}
             >
                 <ListingModal
@@ -314,64 +317,64 @@ const ProfileHost = () => {
 
             <Modal
                 isOpen={showEdit}
-                size='w-full h-full sm:w-96 sm:h-5/6'
+                size='w-full h-full sm:w-10/12 sm:h-5/6'
                 isClose={() => setShowEdit(false)}
-            >   
-                <div className="text-white mt-10 w-9/12 flex flex-col justify-center sm:mx-auto">
-                    <h1 className='text-4xl w-60 font-bold'>Edit Your Profile</h1>
+            >
+                <div className="text-white items-center w-full flex flex-col justify-center sm:mx-auto">
+                    <h1 className='text-4xl font-bold mb-4'>Edit Your Profile</h1>
                     <form onSubmit={handleEditUser}>
-                    <div className="grid grid-cols-2">
-                            <div className="flex flex-col mt-10 space-y-3 w-60">
-                                <div>
-                                    <Input
-                                        type='text'
-                                        label='Name'
-                                        name='name'
-                                        placeholder={`${data.name}`}
-                                        value={formValues.name}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div>
-                                    <Input
-                                        type='email'
-                                        label='Email'
-                                        name='email'
-                                        placeholder={`${data.email}`}
-                                        value={formValues.email}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div>
-                                    <Input
-                                        type='number'
-                                        label='Phone Number'
-                                        name='phone'
-                                        placeholder={`${data.phone}`}
-                                        value={formValues.phone}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                                <div>
-                                    <TextArea
-                                        label='Address'
-                                        name='address'
-                                        placeholder={`${data.address}`}
-                                        value={formValues.address}
-                                        onChange={handleTextAreaChange}
-                                    />
-                                </div>
-                                <div>
-                                    <Input
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* <div className="flex flex-col mt-10 space-y-3 "> */}
+                            <div>
+                                <Input
+                                    type='text'
+                                    label='Name'
+                                    name='name'
+                                    placeholder={`${data.name}`}
+                                    value={formValues.name}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div>
+                                <Input
+                                    type='email'
+                                    label='Email'
+                                    name='email'
+                                    placeholder={`${data.email}`}
+                                    value={formValues.email}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div>
+                                <Input
+                                    type='number'
+                                    label='Phone Number'
+                                    name='phone'
+                                    placeholder={`${data.phone}`}
+                                    value={formValues.phone}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className='row-span-2'>
+                                <TextArea
+                                    label='Address'
+                                    name='address'
+                                    placeholder={`${data.address}`}
+                                    value={formValues.address}
+                                    onChange={handleTextAreaChange}
+                                />
+                            </div>
+                            <div>
+                                <Input
                                     type='file'
                                     label='Your Room Photo'
                                     name='file'
                                     classes='file-input file-input-primary'
                                     placeholder='set room name'
                                     onChange={handleFileInputChange}
-                                    />
-                                </div>
+                                />
                             </div>
+                            {/* </div> */}
                         </div>
                         <div className="flex justify-end">
                             <Button
@@ -381,7 +384,7 @@ const ProfileHost = () => {
                                 children={"Save"}
                             />
                         </div>
-                        </form>
+                    </form>
                 </div>
             </Modal>
         </Layout>

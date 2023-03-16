@@ -61,7 +61,7 @@ const ProfileUSer = () => {
                     <Button
                         color='btn-accent'
                         size='w-full'
-                        children={' Make your home Bnb ? '}
+                        children={' Make your home a BnB ? '}
                         onClick={() => setShowModal(true)}
                     />
                 </div>
@@ -78,20 +78,20 @@ const ProfileUSer = () => {
                 size='w-80'
             >
                 <div className="flex flex-col justify-center">
-                    <h1 className='text-2xl text-center'>Are You Sure To Make Your Home bnb?</h1>
+                    <h1 className='text-2xl text-center'>Are you sure you want to make your home a BnB?</h1>
                     <div className="flex flex-row justify-center space-x-4">
                         <Button
-                        color="btn-warning"
-                        size='mt-5'
-                        children={"Cancel"}
+                            color="btn-warning"
+                            size='mt-5'
+                            children={"Cancel"}
                         />
                         <Button
-                        color="btn-accent"
-                        size='mt-5'
-                        children={"Yes, I Sure"}
+                            color="btn-accent"
+                            size='mt-5'
+                            children={"Yes, I Sure"}
                         />
                     </div>
-                    
+
                 </div>
             </Modal>
 
