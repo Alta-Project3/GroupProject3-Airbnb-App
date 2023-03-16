@@ -13,6 +13,8 @@ interface ListingProps {
     toDelete?: boolean
     handleEdit?: React.MouseEventHandler
     handleDelete?: React.MouseEventHandler
+    name?: string
+    handlename?: boolean
 }
 
 
@@ -26,7 +28,9 @@ const ListingCards: React.FC<ListingProps> = ({
     edit,
     handleDelete,
     handleEdit,
-    toDelete
+    toDelete,
+    name,
+    handlename
 }) => {
 
     const navigate = useNavigate()
@@ -37,17 +41,18 @@ const ListingCards: React.FC<ListingProps> = ({
                 <figure>
                     <img className='object-cover w-screen h-60' src={image} alt="image not found" />
                 </figure>
-                <div className="card-body p-0 py-5 mx-auto">
-                    <h2 className="card-title justify-between">
+                <div className="card-body p-0 py-5 mx-5">
+                    <h2 className="card-title text-lg justify-between w-full">
                         {location}
                         <div className="badge badge-accent"><AiFillStar />{rating}</div>
                     </h2>
-                    <p className='font-light text-start'>{available}</p>
+                    <p className={`font-light text-start ${available ? "hidden" : "static"}`}>{available}</p>
+                    <p className='font-light text-start'>{name}</p>
                     <p className='font-light text-start'>Rp. {price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")} / night</p>
                 </div>
             </button>
 
-            <div className={`flex font-semibold space-x-5 ${edit ? "absolute bottom-1 right-3" : "hidden"}`}>
+            <div className={`flex font-semibold space-x-5 ${edit ? "absolute bottom-5 right-3" : "hidden"}`}>
                 <p className='text-accent' onClick={handleEdit}>
                     edit
                 </p>

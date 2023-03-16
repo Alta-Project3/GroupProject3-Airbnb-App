@@ -5,6 +5,7 @@ import TextArea from './TextArea'
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useCookies } from "react-cookie";
+import { useNavigate, useLocation } from 'react-router-dom'
 import { FaCloudUploadAlt } from 'react-icons/fa';
 
 export interface ListingFormValues {
@@ -26,17 +27,15 @@ const initialFormValues: ListingFormValues = {
 }
 
 interface ListingProps {
-    // onSubmit: (formValues: ListingFormValues) => void;
-    // initialFormValues: ListingFormValues;
-    // editMode: boolean;
+    id: number | any
 }
 
-const ListingModal: React.FC<ListingProps> = () => {
+const ListingModal: React.FC<ListingProps> = ({id}) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['session', 'role'])
     const [loading, setLoading] = useState(false)
     const [formValues, setFormValues] = useState<ListingFormValues>(initialFormValues);
-
+    const navigate = useNavigate()
     const [file,setFile] = useState<File | null>(null)
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
@@ -50,11 +49,7 @@ const ListingModal: React.FC<ListingProps> = () => {
         }
     }
 
-    useEffect(() => {
-        // if (editMode || !editMode) {
-        //     setFormValues(initialFormValues);
-        // }
-    }, [initialFormValues]);
+    
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,14 +60,13 @@ const ListingModal: React.FC<ListingProps> = () => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
     };
 
-    // const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setFormValues({...formValues,[e.target.files[0]]: e.target.value})
-    // };
+
 
     const myKey = '71097a12eab542b5b01173f273f24c96'
 
     const roomEndpoint = `https://baggioshop.site/rooms`
 
+    
     const handleSubmit = (e :React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
         setFormValues(initialFormValues);
@@ -86,6 +80,7 @@ const ListingModal: React.FC<ListingProps> = () => {
                 // let imageFile = document.querySelector('#file')
                 if(file){
                     const formData = new FormData();
+                    formData.append('user_id', id);
                     formData.append('room_picture', file);
                     formData.append('room_name', formValues.name);
                     formData.append('address', response.data.features[0].properties.city);
@@ -103,7 +98,22 @@ const ListingModal: React.FC<ListingProps> = () => {
                     )
                     .then(result => {
                         console.log("Form submitted with values: ", result)
-                        
+                            navigate(`/list_bnb/${id}`,{
+                                state:{
+                                    id: id
+                                }
+                            })
+                            Swal.fire({
+                                position: 'top-start',
+                                icon: 'success',
+                                iconColor: '#FDD231',
+                                padding: '1em',
+                                title: 'Successfuly Add Room',
+                                color: '#ffffff',
+                                background: '#0B3C95 ',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })                        
                     })
                     .catch((error) => {
                     Swal.fire({

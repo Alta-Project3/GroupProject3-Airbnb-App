@@ -210,113 +210,43 @@ const ProfileHost = () => {
             }
         })
     }
-
-    const roomEndpoint = `https://baggioshop.site/rooms`
-    
-    // const initialListingFormValues: ListingFormValues = {
-    //     name: "",
-    //     address: "",
-    //     latitude: 0,
-    //     longitude: 0,
-    //     description: "",
-    //     price: "",
-    //     file: '',
-    // };
-
-    const myKey = '71097a12eab542b5b01173f273f24c96'
-    
-
-    // const handleNewListing = (formValues: ListingFormValues) => {
-    //     console.log(formValues)
-    //     setLoading(true);
-    //     axios.get(`https://api.geoapify.com/v1/geocode/search?text=${formValues.address}&apiKey=${myKey}`)
-    //     .then(response => {
-    //         setLat(response.data.features[0].properties.lat)
-    //         setLon(response.data.features[0].properties.lon)
-    //         console.log("lat", response.data.features[0].properties.lat);
-    //         console.log("lon", response.data.features[0].properties.lon);
-    //         axios.get(`https://api.geoapify.com/v1/geocode/reverse?lat=${response.data.features[0].properties.lat}&lon=${response.data.features[0].properties.lon}&apiKey=${myKey}`)
-    //         .then(response => {
-    //             const formData = new FormData();
-    //             formData.append('room_picture', formValues.file);
-    //             formData.append('room_name', formValues.name);
-    //             formData.append('address', response.data.features[0].properties.city);
-    //             formData.append('description', formValues.description);
-    //             formData.append('price', formValues.price);
-    //             formData.append('latitude', response.data.features[0].properties.lat);
-    //             formData.append('longitude', response.data.features[0].properties.lon);
-    //             axios.post(roomEndpoint, formData,
-    //                 { headers: { 
-    //                     Authorization: `Bearer ${cookies.session}`,
-    //                     Accept: 'application/json',
-    //                     "Content-Type" : 'multipart/form-data'
-    //                 }
-    //             }
-    //             )
-    //             .then(result => {
-    //                 console.log("Form submitted with values: ", result)
-                    
-    //             })
-    //             .catch((error) => {
-    //             Swal.fire({
-    //                 title: "Failed",
-    //                 icon: "error",
-    //                 iconColor: '#FDD231',
-    //                 showCancelButton: true,
-    //                 confirmButtonText: "Yes",
-    //                 cancelButtonText: "No",
-    //                 color: '#ffffff',
-    //                 background: '#0B3C95 ',
-    //                 confirmButtonColor: "#FDD231",
-    //                 cancelButtonColor: "#FE4135",
-    //             })
-    //             console.log(error)
-    //             })
-    //             .finally(() => setLoading(false));
-    //         }).catch(error => {
-    //             console.log(error);
-    //         });
-    //     }).catch(error => {
-    //         console.log(error);
-    //     })
-    // }
     
     return (
         <Layout>
             <Navbar />
-            <div className="text-white mt-10 w-9/12">
-                <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-2xl'>Personal Information</h1>
-                <div className="grid grid-cols-2">
+            <div className="text-white mt-10 w-9/12 flex flex-col sm:justify-center">
+                <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-center'>Personal Information</h1>
+                <div className="grid grid-cols-2 sm:grid-cols-1 sm:justify-items-center">
 
                     <div className="flex flex-col mt-10 space-y-3 w-60 sm:w-96">
                         <div className='border-b-2 border-primary'>
-                            <label htmlFor="name" className='text-l font-semibold sm:text-sm'>
+                            <label htmlFor="name" className='text-l font-semibold'>
                                 Name
                             </label>
-                            <p className='text-slate-300 text-l sm:text-sm'>{data.name}</p>
+                            <p className='text-slate-300 text-l'>{data.name}</p>
                         </div>
                         <div className='border-b-2 border-primary'>
-                            <label htmlFor="email" className='text-l font-semibold sm:text-sm'>
+                            <label htmlFor="email" className='text-l font-semibold'>
                                 Email
                             </label>
-                            <p className='text-slate-300 text-l italic sm:text-sm'>{data.email}</p>
+                            <p className='text-slate-300 text-l italic'>{data.email}</p>
                         </div>
                         <div className='border-b-2 border-primary'>
-                            <label htmlFor="phone_number" className='text-l font-semibold sm:text-sm'>
+                            <label htmlFor="phone_number" className='text-l font-semibold'>
                                 Phone Number
                             </label>
-                            <p className='text-slate-300 text-l sm:text-sm'>{data.phone}</p>
+                            <p className='text-slate-300 text-l'>{data.phone}</p>
                         </div>
                         <div className='border-b-2 border-primary'>
-                            <label htmlFor="address" className='text-l font-semibold sm:text-sm'>
+                            <label htmlFor="address" className='text-l font-semibold'>
                                 Address
                             </label>
-                            <p className='text-slate-300 text-l sm:text-sm'>
+                            <p className='text-slate-300 text-l'>
                                 {data.address}
                             </p>
                         </div>
                     </div>
-                    <div className="flex w-20 ml-10 space-x-2 mt-8 sm:ml-32 md:ml-40">
+                    <div className="flex w-20 ml-10 space-x-2 mt-8 sm:mx-auto">
                         <Button
                             color='btn-accent'
                             size='btn-sm text-xl'
@@ -331,7 +261,7 @@ const ProfileHost = () => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col w-5/6 justify-between mt-10 space-y-3">
+                <div className="flex flex-col w-5/6 mt-10 space-y-3 sm:items-center">
                     <Button
                         color='btn-accent sm:btn-accent sm:text-primary sm:text-xs'
                         size={`sm:w-60 sm:btn-sm  ${cookies.role === Role ? 'static' : 'hidden'}`}
@@ -350,7 +280,7 @@ const ProfileHost = () => {
                         onClick={cookies.role === Role ? () => setShowBnb(true) : handleUpgradeUser}
                     />
                 </div>
-                <div className="flex w-5/6 mt-20 mb-10">
+                <div className="flex w-5/6 mt-20 mb-10 sm:justify-center">
                     <Button
                         color='btn-warning sm:btn-sm sm:text-xs'
                         children={'Delete Account'}
@@ -365,9 +295,7 @@ const ProfileHost = () => {
                 isClose={() => setShowBnb(false)}
             >
                 <ListingModal
-                    // onSubmit={handleNewListing}
-                    // initialFormValues={initialListingFormValues}
-                    // editMode={false}
+                    id={data.id}
                 />
             </Modal>
 
@@ -377,7 +305,7 @@ const ProfileHost = () => {
                 isClose={() => setShowEdit(false)}
             >   
                 <div className="text-white mt-10 w-9/12 flex flex-col justify-center sm:mx-auto">
-                    <h1 className='text-4xl w-60 font-bold'>Personal Information</h1>
+                    <h1 className='text-4xl w-60 font-bold'>Edit Your Profile</h1>
                     <form onSubmit={handleEditUser}>
                     <div className="grid grid-cols-2">
                             <div className="flex flex-col mt-10 space-y-3 w-60">
