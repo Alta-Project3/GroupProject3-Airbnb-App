@@ -90,10 +90,12 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
                 </div>
             </div>
             <div className="flex-none space-x-5">
-                <div className="dropdown dropdown-end">
-                    <label tabIndex={0} className="">
-                        <img src={img} className='rounded-full w-10 h-10 sm:h-8 sm:w-8 hover:border-2 hover:border-accent hover:cursor-pointer' alt="" />
-                    </label>
+                <div tabIndex={0} className="dropdown dropdown-end">
+                    <div className="avatar">
+                        <div className="w-8 sm:w-12 rounded-full">
+                            <img src={img} />
+                        </div>
+                    </div>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
                         <li onClick={() => navigate('/profile_host')}><a>
                             <HiCog6Tooth />
