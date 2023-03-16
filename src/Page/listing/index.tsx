@@ -15,6 +15,7 @@ import { useCookies } from 'react-cookie'
 
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom'
+import Loading from '../../Components/Loading'
 
 
 export interface ListingFormValues {
@@ -371,7 +372,7 @@ const Listing = () => {
               )
             })
           ) : (
-            <h1>Loading</h1>
+            <Loading/>
           )}
         </div>
       </div>
@@ -391,7 +392,7 @@ const Listing = () => {
         size='w-full h-full sm:w-10/12 sm:h-5/6'
         isClose={() => setShowBnb(false)}
       >
-
+        { loading === true ? ( 
         <div className="flex justify-center">
           <form onSubmit={handleSubmit}>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -449,58 +450,9 @@ const Listing = () => {
 
           </form>
         </div>
-
-
-        {/* <div className="flex justify-center">
-          <form onSubmit={handleSubmit} className='flex flex-col w-60 sm:w-80'>
-            <Input
-              type='text'
-              label='Name'
-              name='name'
-              placeholder='set room name'
-              value={formValues.name}
-              onChange={handleInputChange}
-            />
-            <TextArea
-              label='Address'
-              name='address'
-              placeholder='enter home address'
-              value={formValues.address}
-              onChange={handleTextAreaChange}
-            />
-            <TextArea
-              label='Description'
-              name='description'
-              placeholder='enter your home descrption'
-              value={formValues.description}
-              onChange={handleTextAreaChange}
-            />
-
-            <label className='mb-2 font-light block' htmlFor="price">Price/night</label>
-            <CurrencyInput
-              className='input input-primary bg-primary'
-              id="price"
-              name="price"
-              prefix='Rp. '
-              decimalSeparator=','
-              groupSeparator='.'
-              placeholder="Rp. "
-              value={formValues.price}
-              decimalsLimit={2}
-              onValueChange={(value, name) => setFormValues({ ...formValues, price: value ? parseInt(value) : 0 })}
-            />
-            <Input
-              type='file'
-              label='Your Room Photo'
-              name='file'
-              classes='file-input file-input-primary'
-              placeholder='set room name'
-              onChange={handleFileChange}
-            />
-
-            <button type='submit' className='btn btn-accent'>Save</button>
-          </form>
-        </div> */}
+        ):(
+          <Loading/>
+        )}
 
       </Modal>
 
@@ -509,7 +461,8 @@ const Listing = () => {
         isOpen={showEdit}
         size='w-full h-full sm:w-10/12 sm:h-5/6'
         isClose={() => setShowEdit(false)}
-      >
+      > 
+        {loading === true ? (
         <div className="flex justify-center">
           <form onSubmit={handleEditRoom}>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -567,59 +520,9 @@ const Listing = () => {
 
           </form>
         </div>
-
-
-
-        {/* <div className="flex justify-center">
-          <form onSubmit={handleEditRoom} className='flex flex-col w-60 sm:w-80'>
-            <Input
-              type='text'
-              label='Name'
-              name='name'
-              placeholder='set room name'
-              value={formValues.name}
-              onChange={handleInputChange}
-            />
-            <TextArea
-              label='Address'
-              name='address'
-              placeholder='enter home address'
-              value={formValues.address}
-              onChange={handleTextAreaChange}
-            />
-            <TextArea
-              label='Description'
-              name='description'
-              placeholder='enter your home descrption'
-              value={formValues.description}
-              onChange={handleTextAreaChange}
-            />
-
-            <label className='mb-2 font-light block' htmlFor="price">Price/night</label>
-            <CurrencyInput
-              className='input input-primary bg-primary'
-              id="price"
-              name="price"
-              prefix='Rp. '
-              decimalSeparator=','
-              groupSeparator='.'
-              placeholder="Rp. "
-              value={formValues.price}
-              decimalsLimit={2}
-              onValueChange={(value, name) => setFormValues({ ...formValues, price: value ? parseInt(value) : 0 })}
-            />
-            <Input
-              type='file'
-              label='Your Room Photo'
-              name='file'
-              classes='file-input file-input-primary'
-              placeholder='set room name'
-              onChange={handleFileChange}
-            />
-
-            <button type='submit' className='btn btn-accent'>Save</button>
-          </form>
-        </div> */}
+        ):(
+            <Loading/>
+        )}
       </Modal>
 
     </Layout>

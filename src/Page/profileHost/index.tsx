@@ -19,6 +19,7 @@ import { FaRoad } from 'react-icons/fa'
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { HiPencil } from 'react-icons/hi2';
 import { GiJourney } from 'react-icons/gi'
+import Loading from '../../Components/Loading';
 
 
 interface FormValues {
@@ -69,7 +70,7 @@ const ProfileHost = () => {
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading(false);
+            setLoading(true);
         }
     };
 
@@ -221,7 +222,7 @@ const ProfileHost = () => {
                 <div className="text-white mt-10 w-9/12 flex flex-col sm:justify-center">
                     <h1 className='text-4xl w-60 sm:w-full font-bold sm:text-center'>Personal Information</h1>
                     <div className="grid grid-cols-2 sm:grid-cols-1 sm:justify-items-center">
-
+                    {data && loading === true ? (
                         <div className="flex flex-col mt-10 space-y-3 w-60 sm:w-96">
                             <div className='border-b-2 border-primary md:border-base-100'>
                                 <label htmlFor="name" className='text-l font-semibold'>
@@ -258,6 +259,9 @@ const ProfileHost = () => {
                                 </p>
                             </div>
                         </div>
+                    ):(
+                        <Loading/>
+                    )}
                         <div className="flex w-20 ml-10 space-x-2 mt-8 sm:ml-4 sm:hidden">
                             <Button
                                 color='btn-accent'
@@ -309,15 +313,21 @@ const ProfileHost = () => {
                 size='w-full h-full sm:h-5/6 sm:w-10/12 md:w-10/12'
                 isClose={() => setShowBnb(false)}
             >
-                <ListingModal
-                    id={data.id}
-                />
+                {loading === true ?(
+                    <ListingModal
+                        id={data.id}
+                    />
+                ):(
+                    <Loading/>
+                )}
             </Modal>
             <Modal
                 isOpen={showEdit}
                 size='w-full h-full sm:w-10/12 sm:h-5/6'
                 isClose={() => setShowEdit(false)}
-            >
+            > 
+                {loading === true ?(
+
                 <div className="text-white items-center w-full flex flex-col justify-center sm:mx-auto">
                     <h1 className='text-4xl font-bold mb-4'>Edit Your Profile</h1>
                     <form onSubmit={handleEditUser}>
@@ -384,6 +394,9 @@ const ProfileHost = () => {
                         </div>
                     </form>
                 </div>
+                ):(
+                <Loading/>
+                )}
             </Modal>
         </Layout>
     )

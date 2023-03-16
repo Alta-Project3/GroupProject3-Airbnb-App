@@ -15,6 +15,7 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import sowwy from '../../assets/Sorry.jpg'
+import Loading from '../../Components/Loading'
 
 interface FormValues {
   minprice: number;
@@ -145,7 +146,7 @@ const Home = () => {
               )
             })
           ) : (
-              <h1>Loading</h1>
+              <Loading/>
           )}
         </div>
       </div>
@@ -155,68 +156,73 @@ const Home = () => {
         title="Filters"
         size='w-80 sm:w-96'
       >
-        <form onSubmit={handleSubmit} className='flex flex-col font-light space-y-5'>
-          <label htmlFor="minprice">Minimum Price</label>
-          <CurrencyInput
-            className='input input-primary bg-primary'
-            id="minprice"
-            name="minprice"
-            prefix='Rp. '
-            decimalSeparator=','
-            groupSeparator='.'
-            placeholder="Rp. "
-            defaultValue={formValues.minprice}
-            decimalsLimit={2}
-            onValueChange={(value, name) => setFormValues({ ...formValues, minprice: value ? parseInt(value) : 0 })}
-          />
-          <label htmlFor="maxprice">Maximum Price</label>
-          <CurrencyInput
-            className='input input-primary bg-primary'
-            id="maxprice"
-            name="maxprice"
-            prefix='Rp. '
-            decimalSeparator=','
-            groupSeparator='.'
-            placeholder="Rp. "
-            defaultValue={formValues.maxprice}
-            decimalsLimit={2}
-            onValueChange={(value, name) => setFormValues({ ...formValues, maxprice: value ? parseInt(value) : 0 })}
-          />
-          <label htmlFor="daterange">
-            Date Range
-          </label>
-          <DatePicker
-            className="input input-primary bg-primary w-full"
-            name='daterange'
-            placeholderText='Set reservation date'
-            selectsRange={true}
-            startDate={startDate}
-            endDate={endDate}
-            onChange={
-              (e: any) =>
-                setFormValues({ ...formValues, daterange: e })
-            }
-            // onChange={handleInputChange}
-            dateFormat="d MMM yyyy"
-            minDate={new Date()}
-            isClearable={true}
-            clearButtonClassName="btn btn-ghost"
-          />
-          <div>
-            <div id="minrating">Minimum rating</div>
-            <Rating
-              itemStyles={customStyles}
-              isRequired
-              value={formValues.minrating}
-              // visibleLabelId="minrating"
-              onChange={(selectedValue: any) =>
-                setFormValues((prevData) => ({ ...prevData, minrating: selectedValue }))
-              }
+        { loading === true ? (
+          <form onSubmit={handleSubmit} className='flex flex-col font-light space-y-5'>
+            <label htmlFor="minprice">Minimum Price</label>
+            <CurrencyInput
+              className='input input-primary bg-primary'
+              id="minprice"
+              name="minprice"
+              prefix='Rp. '
+              decimalSeparator=','
+              groupSeparator='.'
+              placeholder="Rp. "
+              defaultValue={formValues.minprice}
+              decimalsLimit={2}
+              onValueChange={(value, name) => setFormValues({ ...formValues, minprice: value ? parseInt(value) : 0 })}
             />
-          </div>
-          <button className='btn btn-accent' type='submit' onClick={() => console.log(formValues)}>Submit</button>
+            <label htmlFor="maxprice">Maximum Price</label>
+            <CurrencyInput
+              className='input input-primary bg-primary'
+              id="maxprice"
+              name="maxprice"
+              prefix='Rp. '
+              decimalSeparator=','
+              groupSeparator='.'
+              placeholder="Rp. "
+              defaultValue={formValues.maxprice}
+              decimalsLimit={2}
+              onValueChange={(value, name) => setFormValues({ ...formValues, maxprice: value ? parseInt(value) : 0 })}
+            />
+            <label htmlFor="daterange">
+              Date Range
+            </label>
+            <DatePicker
+              className="input input-primary bg-primary w-full"
+              name='daterange'
+              placeholderText='Set reservation date'
+              selectsRange={true}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={
+                (e: any) =>
+                  setFormValues({ ...formValues, daterange: e })
+              }
+              // onChange={handleInputChange}
+              dateFormat="d MMM yyyy"
+              minDate={new Date()}
+              isClearable={true}
+              clearButtonClassName="btn btn-ghost"
+            />
+            <div>
+              <div id="minrating">Minimum rating</div>
+              <Rating
+                itemStyles={customStyles}
+                isRequired
+                value={formValues.minrating}
+                // visibleLabelId="minrating"
+                onChange={(selectedValue: any) =>
+                  setFormValues((prevData) => ({ ...prevData, minrating: selectedValue }))
+                }
+              />
+            </div>
+            <button className='btn btn-accent' type='submit' onClick={() => console.log(formValues)}>Submit</button>
 
-        </form>
+          </form>
+
+        ):(
+          <Loading/>
+        )}
       </Modal>
     </Layout>
   )
