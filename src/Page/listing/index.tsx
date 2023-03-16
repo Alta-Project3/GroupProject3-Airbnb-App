@@ -81,25 +81,6 @@ const Listing = () => {
     fetchRoomData();
     
   }, [endpoint]);
-  // if(showEdit === true ){
-  //   const fetchRoom = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${roomEndpoint}/${selectedRoom}`,
-  //         { headers: { Authorization: `Bearer ${cookies.session}` } }
-  //         );
-  //         console.log("room : ", response);
-  //         setRoom(response.data.data)
-  //       } catch (error) {
-  //         console.error(error);
-  //       } finally {
-  //         setLoading(true);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchRoom();
-  //   }, []);
-  // }
 
     const roomEndpoint = `https://baggioshop.site/rooms`
 
@@ -364,7 +345,9 @@ const Listing = () => {
       <Navbar
       children={<h1 className="font-bold text-2xl">Your Listings</h1>}
       />
-        <div className="flex flex-col mt-4 gap-10 w-full mx-auto justify-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-5 sm:shadow-lg sm:border-primary overflow-auto">
+
+        <div className='flex w-10/12'>
+        <div className="max-w-screen-xl flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'">
           { rooms && loading === true ?(
             rooms.map((item:any, index:any)=> {
               return(
@@ -387,6 +370,7 @@ const Listing = () => {
           ) : (
             <h1>Loading</h1>
           )}
+        </div>
         </div>
 
 
