@@ -123,13 +123,39 @@ const Home = () => {
 
   return (
     <Layout>
+      <Navbar>
+        <SearchFilter
+          handleClick={()=> setShowModal(true)}
+        />
+      </Navbar>
+      <div className='flex w-10/12'>
+        <div className='max-w-screen-xl flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+          { rooms && loading ? (
+            rooms.map((room: any) => {
+              return (
+                <ListingCards
+                  key={room.id}
+                  id={room.id}
+                  location={room.address}
+                  rating={room.rating}
+                  available={room.available}
+                  price={room.price}
+                  image={room.room_picture}
+                />
+              )
+            })
+          ) : (
+              <h1>Loading</h1>
+          )}
+        </div>
+      </div>
       <Modal
         isOpen={showModal}
         isClose={() => setShowModal(false)}
         title="Filters"
-        size='flex flex-col w-10/12 h-10/12'
+        size='w-80 sm:w-96'
       >
-        <form onSubmit={handleSubmit} className='flex flex-col font-light'>
+        <form onSubmit={handleSubmit} className='flex flex-col font-light space-y-5'>
           <label htmlFor="minprice">Minimum Price</label>
           <CurrencyInput
             className='input input-primary bg-primary'
@@ -192,34 +218,6 @@ const Home = () => {
 
         </form>
       </Modal>
-      <Navbar>
-        <SearchFilter
-          handleClick={handleClick}
-        />
-      </Navbar>
-
-      <div className='flex w-10/12'>
-        <div className='max-w-screen-xl flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
-          { rooms && loading ? (
-            rooms.map((room: any) => {
-              return (
-                <ListingCards
-                  key={room.id}
-                  id={room.id}
-                  location={room.address}
-                  rating={room.rating}
-                  available={room.available}
-                  price={room.price}
-                  image={room.room_picture}
-                />
-              )
-            })
-          ) : (
-              <h1>Loading</h1>
-          )}
-        </div>
-      </div>
-
     </Layout>
   )
 }

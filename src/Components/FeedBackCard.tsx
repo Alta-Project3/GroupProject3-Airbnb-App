@@ -8,11 +8,12 @@ import { Rating } from '@smastrom/react-rating'
 interface FeedBackProps {
     id: number;
     location: string;
-    available: string;
+    dateStart: string;
+    dateEnd: string
     price: number;
-    image: string;
     edit?: boolean
     toDelete?: boolean
+    duration?: number
     handleFeedback?: React.MouseEventHandler
     handleEdit?: React.MouseEventHandler
     value?: any
@@ -22,10 +23,11 @@ interface FeedBackProps {
 const FeedBackCard: React.FC<FeedBackProps> = ({
     id, 
     location, 
-    available, 
+    dateStart, 
     price, 
-    image, 
-    edit, 
+    edit,
+    duration,
+    dateEnd,
     handleEdit,
     handleFeedback,
     toDelete,
@@ -51,14 +53,15 @@ const FeedBackCard: React.FC<FeedBackProps> = ({
     
     };
     return (
-        <div className='flex relative justify-center w-80 mx-auto'>
+        <div className='flex relative justify-start w-80 mx-auto'>
         <button onClick={() => navigate(`/stays/${id}`)} className="card w-80 bg-primary shadow-xl p-0">
-            <div className="card-body p-2 py-5 mx-auto">
-                <p className='font-light text-start'>{available}</p>
-                <h2 className="card-title text-lg text-start">
+            <div className="card-body p-2 py-5">
+                <h2 className="card-title text-xl text-start">
                     {location}
                 </h2>
-                <p className='font-light text-start'>Rp. {price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")} X 5 night</p>
+                <p className='font-light text-start'> Check In : {dateStart}</p>
+                <p className='font-light text-start'> Check Out : {dateEnd}</p>
+                <p className='font-light text-start'>Rp. {price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")} x {duration} night</p>
                 <p className='font-light text-start'>Total: Rp. {total.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")}</p>
                     <div className="rating">
                         <Rating
