@@ -11,20 +11,23 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { Rating } from '@smastrom/react-rating';
+import { FaChevronCircleLeft } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const DetailStay = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['session']);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   // Get stay ID from url
-  const { stayId } = useParams()
-  const [stay, setStay] = useState(stays.find(({ id }) => id === parseInt(stayId || "")))
+  const { stayId } = useParams();
+  const [stay, setStay] = useState(stays.find(({ id }) => id === parseInt(stayId || "")));
 
   // API
-  const endpoint = "https://baggioshop.site/rooms/"
+  const endpoint = "https://baggioshop.site"
   const fetchDetails = async () => {
     await axios
-      .get(`${endpoint}${stayId}`, {
+      .get(`${endpoint}/rooms/${stayId}`, {
         headers: { Authorization: `Bearer ${cookies.session}` },
       })
       .then((res) => {
@@ -32,6 +35,39 @@ const DetailStay = () => {
         console.log(res.data.data);
       })
       .catch((err) => console.log(err));
+  };
+
+  const fetchReservations = async () => {
+    try {
+      const response = await axios.get(`${endpoint}/rooms/${stayId}/reservations`, {
+        headers: { Authorization: `Bearer ${cookies.session}` },
+      });
+      const reservations = response.data.data;
+      setReservations(reservations);
+      console.log(reservations)
+
+      if (reservations) {
+        const dates = reservations.flatMap((reservation: any) => {
+          const startDate = new Date(reservation.date_start);
+          const endDate = new Date(reservation.date_end);
+
+          // Get the number of days between start and end dates
+          const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+          const numDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+          // Generate an array of dates from start to end
+          return Array.from({ length: numDays }, (_, i) => {
+            const date = new Date(startDate.getTime() + i * (1000 * 3600 * 24));
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+          });
+        });
+        setReservedDates(dates);
+        console.log("Reserved dates: ", dates);
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Rating
@@ -47,12 +83,12 @@ const DetailStay = () => {
   };
 
   // Date Picker
+  const [reservations, setReservations] = useState<any>([]);
+  const [reservedDates, setReservedDates] = useState<Date[]>()
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
 
   // Disable Date Range
-  const [startDateDisable, setStartDateDisable] = useState<string>('2023-3-17')
-  const [endDateDisable, setEndDateDisable] = useState<string>('2023-3-20')
   const getDatesInRange = (startDateStr: string, endDateStr: string): Date[] => {
     const startDate = new Date(startDateStr);
     const endDate = new Date(endDateStr);
@@ -65,7 +101,6 @@ const DetailStay = () => {
     return dates;
   };
 
-  const disabledDates: Date[] = getDatesInRange(startDateDisable, endDateDisable)
 
   // Check if two arrays are unique
   const uniqueArrays = (arr1: any[], arr2: any[]): boolean =>
@@ -85,6 +120,7 @@ const DetailStay = () => {
 
   useEffect(() => {
     // fetchDetails();
+    fetchReservations();
 
     if (dateWarning) {
       const timeoutId = setTimeout(() => {
@@ -116,42 +152,36 @@ const DetailStay = () => {
         </Navbar>
       </div>
 
-      <div className='flex flex-col justify-center w-screen md:w-10/12'>
+      <div className='flex flex-col justify-center w-screen md:w-10/12 max-w-screen-lg'>
         <h1 className='hidden md:flex text-4xl font-semibold my-4'>{stay?.name}</h1>
         <div className='grid gap-4 grid-cols-3'>
-          <div className='col-span-3 md:col-span-2 w-full'>
-            <img className='md:rounded-lg' src={stay?.image} alt="image" />
+
+          <div className='col-span-3 md:col-span-2 w-full justify-self-center'>
+            <div className='fixed top-3 flex w-full justify-center'>
+              <button onClick={() => navigate(-1)} className="flex w-10/12 md:hidden ml-1 text-4xl text-white hover:text-accent">
+                <FaChevronCircleLeft />
+              </button>
+            </div>
+
+            <img className='md:rounded-lg object-cover w-full h-60 md:h-96' src={stay?.room_picture} alt="image" />
+
           </div>
 
-          <div className='hidden md:flex md:flex-col justify-end'>
-            <h2 className="flex flex-col justify-center gap-2 items-begin mb-4">
-              <p className='text-2xl font-semibold'>{stay?.location}</p>
-              <Rating
-                value={stay ? stay.rating : 0}
-                style={{ maxWidth: 160 }}
-                itemStyles={customStyles}
-                readOnly
-              />
-            </h2>
-            <p className='font-light lg:line-clamp-14 line-clamp-10'>
-              {stay?.description}
-            </p>
-            <button
-              className='self-start font-semibold underline hover:text-accent'
-              onClick={() => setShowModal(true)}
-            >
-              Show More
-            </button>
+          <div className='col-span-1 bg-primary rounded-lg hidden md:flex flex-col items-center py-4 px-4'>
+            <h2 className='font-semibold text-2xl mb-4 text-accent'>Reserve Now</h2>
+            <div className='flex w-full justify-between items-center'>
+              <p className='font-semibold'>Rp. {stay?.price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")} <span className='font-light text-xs'>/night</span></p>
+              <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
+            </div>
           </div>
-
         </div>
 
       </div>
 
 
-      <div className='flex flex-col w-10/12 md:w-8/12 gap-2 my-2'>
-        <div className='md:hidden'>
-          <h1 className='text-2xl font-semibold mb-2'>{stay?.name}</h1>
+      <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 my-2'>
+        <div>
+          <h1 className='md:hidden text-2xl font-semibold mb-2'>{stay?.name}</h1>
           <h2 className="flex justify-begin gap-2 items-center">
             <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
             <p className='font-semibold'>{stay?.location}</p>
@@ -179,8 +209,9 @@ const DetailStay = () => {
             if (update[1] != null) {
               // const chosenDates = update.map((date: Date) => date.toISOString().substring(0, 10));
               const chosenDates = getDatesInRange(update[0], update[1])
-              console.log(chosenDates, disabledDates)
-              if (uniqueArrays(chosenDates, disabledDates)) {
+              console.log("chosen: ", chosenDates)
+              console.log("reserved: ", reservedDates)
+              if (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates)) {
                 console.log("true")
                 setDateRange(update);
 
@@ -194,7 +225,7 @@ const DetailStay = () => {
           }}
           dateFormat="d MMM yyyy"
           minDate={new Date()}
-          excludeDates={disabledDates}
+          excludeDates={reservedDates}
           isClearable={true}
           clearButtonClassName="btn btn-ghost"
         />

@@ -170,20 +170,22 @@ const Home = () => {
         />
       </Navbar>
 
-      <div className='flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
-        {rooms.map((room: any) => {
-          return (
-            <ListingCards
-              key={room.id}
-              id={room.id}
-              location={room.address}
-              rating={room.rating}
-              available={room.available}
-              price={room.price}
-              image={room.image}
-            />
-          )
-        })}
+      <div className='flex w-10/12'>
+        <div className='max-w-screen-xl flex flex-col my-4 gap-4 w-full items-center sm:mt-10 sm:grid sm:grid-cols-2 sm:mx-auto lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+          {rooms.map((room: any) => {
+            return (
+              <ListingCards
+                key={room.id}
+                id={room.id}
+                location={room.address}
+                rating={room.rating}
+                available={room.available}
+                price={room.price}
+                image={room.room_picture}
+              />
+            )
+          })}
+        </div>
       </div>
 
     </Layout>
