@@ -52,11 +52,11 @@ const ListingCards: React.FC<ListingProps> = ({
                 </div>
             </button>
 
-            <div className={`flex font-semibold space-x-5 ${edit ? "absolute bottom-5 right-3" : "hidden"}`}>
-                <p className='text-accent' onClick={handleEdit}>
+            <div className={`flex flex-col font-semibold ${edit ? "absolute bottom-5 right-3" : "hidden"}`}>
+                <p className='text-accent hover:cursor-pointer' onClick={handleEdit}>
                     edit
                 </p>
-                <p className='text-warning' onClick={handleDelete}>
+                <p className='text-warning hover:cursor-pointer' onClick={handleDelete}>
                     delete
                 </p>
             </div>

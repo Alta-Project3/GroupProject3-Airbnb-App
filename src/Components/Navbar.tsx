@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { FaChevronCircleLeft } from "react-icons/fa"
 import { HiCog6Tooth } from 'react-icons/hi2'
 import { FaSignOutAlt } from 'react-icons/fa'
+import { GiJourney } from 'react-icons/gi'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useCookies } from 'react-cookie'
@@ -105,6 +106,11 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
                             <li onClick={() => navigate('/profile_host')}><a>
                                 <HiCog6Tooth />
                                 Profile
+                            </a>
+                            </li>
+                            <li onClick={() => navigate('/trip')}><a>
+                                <GiJourney />
+                                Trips
                             </a>
                             </li>
                             <li onClick={handleLogout}><a>

@@ -170,7 +170,7 @@ const DetailStay = () => {
         isOpen={showModal}
         isClose={() => setShowModal(false)}
         title="Room Description"
-        size='flex flex-col w-10/12 h-10/12'
+        size='w-full h-full sm:w-10/12 sm:h-5/6'
       >
         <p className='font-light'>
           {stay?.description}
@@ -183,7 +183,7 @@ const DetailStay = () => {
       </div>
 
       <div className='flex flex-col justify-center w-screen md:w-10/12 max-w-screen-lg'>
-        <h1 className='hidden md:flex text-4xl font-semibold my-4'>{stay?.name}</h1>
+        <h1 className='hidden text-accent md:flex text-4xl font-bold my-4'>{stay?.room_name}</h1>
         <div className='grid gap-4 grid-cols-3'>
 
           <div className='col-span-3 md:col-span-2 w-full justify-self-center'>
@@ -197,47 +197,48 @@ const DetailStay = () => {
 
           </div>
 
-          <div className='col-span-1 bg-primary rounded-lg hidden md:flex gap-2 flex-col items-center py-4 px-4'>
-            <h2 className='font-semibold text-2xl mb-4 text-accent'>Reserve Now</h2>
+          <div className='col-span-1 bg-primary rounded-lg hidden md:flex gap-2 flex-col items-center justify-between py-4 px-4'>
+            <div className='w-full flex flex-col gap-2'>
+              <h2 className='self-center font-semibold text-2xl mb-4 text-accent'>Reserve Now</h2>
+              <h2 className="flex w-full justify-between items-center">
+                <p className='font-semibold'>{stay?.address}</p>
+                <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
+              </h2>
 
-            <h2 className="flex w-full justify-between items-center">
-              <p className='font-semibold'>Hello {stay?.location}</p>
-              <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
-            </h2>
+              <DatePicker
+                className="input input-ghost bg-base-100 w-full"
+                placeholderText='Set reservation date'
+                selectsRange={true}
+                startDate={startDate}
+                endDate={endDate}
+                onChange={(update: any) => {
+                  setDateRange(update);
 
-            <DatePicker
-              className="input input-ghost bg-base-100 w-full"
-              placeholderText='Set reservation date'
-              selectsRange={true}
-              startDate={startDate}
-              endDate={endDate}
-              onChange={(update: any) => {
-                setDateRange(update);
+                  if (update[1] != null) {
+                    // const chosenDates = update.map((date: Date) => date.toISOString().substring(0, 10));
+                    const chosenDates = getDatesInRange(update[0], update[1])
+                    console.log("chosen: ", chosenDates)
+                    console.log("reserved: ", reservedDates)
+                    if (stay?.price && (reservedDates === undefined || (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates)))) {
+                      console.log("true")
+                      setDateRange(update);
+                      setTotalPrice(stay?.price * (daysBetween(update[0], update[1]) - 1))
 
-                if (update[1] != null) {
-                  // const chosenDates = update.map((date: Date) => date.toISOString().substring(0, 10));
-                  const chosenDates = getDatesInRange(update[0], update[1])
-                  console.log("chosen: ", chosenDates)
-                  console.log("reserved: ", reservedDates)
-                  if (stay?.price && (reservedDates === undefined || (chosenDates && reservedDates && uniqueArrays(chosenDates, reservedDates)))) {
-                    console.log("true")
-                    setDateRange(update);
-                    setTotalPrice(stay?.price * (daysBetween(update[0], update[1]) - 1))
-
-                  } else {
-                    handleWarning();
-                    console.log("false");
-                    setDateRange([null, null]);
+                    } else {
+                      handleWarning();
+                      console.log("false");
+                      setDateRange([null, null]);
+                    }
                   }
-                }
 
-              }}
-              dateFormat="d MMM yyyy"
-              minDate={new Date()}
-              excludeDates={reservedDates}
-              isClearable={true}
-              clearButtonClassName="btn btn-ghost"
-            />
+                }}
+                dateFormat="d MMM yyyy"
+                minDate={new Date()}
+                excludeDates={reservedDates}
+                isClearable={true}
+                clearButtonClassName="btn btn-ghost"
+              />
+            </div>
 
             <div className='flex flex-col w-full'>
               <div
@@ -255,7 +256,7 @@ const DetailStay = () => {
               <div className={`${dateWarning
                 ? 'opacity-0 transition-opacity duration-500 hidden'
                 : 'opacity-100 transition-opacity duration-500'
-                } flex items-center justify-between w-full`}>
+                } flex flex-col items-start gap-2 mt-20 w-full h-full`}>
 
                 <div>
                   <p>{formatValue({
@@ -285,8 +286,8 @@ const DetailStay = () => {
                 </div>
 
                 {dateRange[1] !== null ?
-                  <button onClick={handleReserve} className='btn btn-accent'>Reserve</button> :
-                  <button disabled className='btn btn-accent'>Reserve</button>
+                  <button onClick={handleReserve} className='btn w-full btn-accent'>Reserve</button> :
+                  <button disabled className='btn w-full btn-accent'>Reserve</button>
                 }
               </div>
             </div>
@@ -299,12 +300,13 @@ const DetailStay = () => {
 
       <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 mt-2 mb-30 md:mb-2'>
         <div>
-          <h1 className='md:hidden text-2xl font-semibold mb-2'>{stay?.name}</h1>
+          <h1 className='md:hidden text-2xl font-semibold'>{stay?.room_name}</h1>
           <h2 className="md:hidden flex justify-begin gap-2 items-center">
             <div className="badge badge-accent"><AiFillStar />{stay?.rating}</div>
-            <p className='font-semibold'>{stay?.location}</p>
+            <p className='font-semibold'>{stay?.address}</p>
           </h2>
-          <p className='font-light line-clamp-5'>
+          <h2 className='font-semibold text-accent mt-4'>About this room</h2>
+          <p className='font-light line-clamp-5 md:line-clamp-10'>
             {stay?.description}
           </p>
           <button
