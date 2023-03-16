@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { FaChevronCircleLeft } from "react-icons/fa"
 import { HiCog6Tooth } from 'react-icons/hi2'
 import { FaSignOutAlt } from 'react-icons/fa'
@@ -15,14 +15,14 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
-    
-    
+
+
     // handle log out
     const [cookies, setCookie, removeCookie] = useCookies(['session', 'role']);
     const navigate = useNavigate()
 
-    
-    
+
+
     const handleLogout = () => {
         Swal.fire({
             title: "Are you sure?",
@@ -56,7 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
 
     //Handle Profile Picture
     const [loading, setLoading] = React.useState(false)
-    const [img, setImg] = React.useState<any>()  
+    const [img, setImg] = React.useState<any>()
     const endpoint = `https://baggioshop.site/users`
 
     const fetchDataUser = async () => {
@@ -64,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
             const response = await axios.get(endpoint, {
                 headers: {
                     Accept: 'application/json',
-                    Authorization: `Bearer ${cookies.session}` 
+                    Authorization: `Bearer ${cookies.session}`
                 }
             });
             setImg(response.data.data.profile_picture)
@@ -78,13 +78,13 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
     useEffect(() => {
         fetchDataUser();
     }, [endpoint]);
-    
+
     return (
         <div className="navbar w-screen bg-base-100 shadow-md z-10 top-0 sticky text-white border-b-2 border-primary">
             <div className="flex-1 ml-1 space-x-4">
-                <a className="ml-1 text-3xl text-white">
+                <button onClick={() => navigate(-1)} className="ml-1 text-3xl text-white hover:text-accent">
                     <FaChevronCircleLeft />
-                </a>
+                </button>
                 <div className="flex w-60 justify-center">
                     {children}
                 </div>
@@ -92,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
             <div className="flex-none space-x-5">
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="">
-                        <img src={img} className='rounded-full w-10 h-10 sm:h-8 sm:w-8' alt="" />
+                        <img src={img} className='rounded-full w-10 h-10 sm:h-8 sm:w-8 hover:border-2 hover:border-accent hover:cursor-pointer' alt="" />
                     </label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-primary rounded-box w-52">
                         <li onClick={() => navigate('/profile_host')}><a>
