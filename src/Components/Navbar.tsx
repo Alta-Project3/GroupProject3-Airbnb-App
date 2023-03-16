@@ -56,7 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, handleProfile, children }) => {
 
 
     //Handle Profile Picture
-    const [loading, setLoading] = React.useState(false)
+    const [loading, setLoading] = React.useState(true)
     const [img, setImg] = React.useState<any>()
     const endpoint = `https://baggioshop.site/users`
 
