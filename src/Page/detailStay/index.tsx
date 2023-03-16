@@ -14,6 +14,7 @@ import { Rating } from '@smastrom/react-rating';
 import { FaChevronCircleLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { formatValue } from 'react-currency-input-field';
+import CommentCard from '../../Components/CommentCard';
 
 const DetailStay = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['session']);
@@ -193,11 +194,11 @@ const DetailStay = () => {
               </button>
             </div>
 
-            <img className='md:rounded-lg object-cover w-full h-60 md:h-96' src={stay?.room_picture} alt="image" />
+            <img className='md:rounded-lg md:shadow-lg object-cover w-full h-60 md:h-96' src={stay?.room_picture} alt="image" />
 
           </div>
 
-          <div className='col-span-1 bg-primary rounded-lg hidden md:flex gap-2 flex-col items-center justify-between py-4 px-4'>
+          <div className='col-span-1 shadow-lg bg-primary rounded-lg hidden md:flex gap-2 flex-col items-center justify-between py-4 px-4'>
             <div className='w-full flex flex-col gap-2'>
               <h2 className='self-center font-semibold text-2xl mb-4 text-accent'>Reserve Now</h2>
               <h2 className="flex w-full justify-between items-center">
@@ -298,7 +299,7 @@ const DetailStay = () => {
       </div>
 
 
-      <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 mt-2 mb-30 md:mb-2'>
+      <div className='flex flex-col w-10/12 max-w-screen-lg gap-2 mt-2 mb-40 md:mb-2'>
         <div>
           <h1 className='md:hidden text-2xl font-semibold'>{stay?.room_name}</h1>
           <h2 className="md:hidden flex justify-begin gap-2 items-center">
@@ -310,11 +311,22 @@ const DetailStay = () => {
             {stay?.description}
           </p>
           <button
-            className='self-start font-semibold underline hover:text-accent'
+            className='self-start font-semibold underline hover:text-accent mb-4'
             onClick={() => setShowModal(true)}
           >
             Show More
           </button>
+
+          <h2 className='font-semibold text-accent mt-4'>Reviews</h2>
+          <CommentCard
+            id={2}
+            user="Mus"
+            image="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+            date="2023-10-10"
+            rating={4}
+            comment="Tempatnya lumayan oke sih ini"      
+          />
+
         </div>
       </div>
 
@@ -406,12 +418,7 @@ const DetailStay = () => {
               }
             </div>
           </div>
-
-
-
-
         </div>
-
       </div>
 
 
