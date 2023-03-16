@@ -25,6 +25,7 @@ const DetailStay = () => {
   // Get stay ID from url
   const { stayId } = useParams();
   const [stay, setStay] = useState(stays.find(({ id }) => id === parseInt(stayId || "")));
+  const [comments, setComments] = useState([]);
 
 
   // API
@@ -36,6 +37,17 @@ const DetailStay = () => {
       })
       .then((res) => {
         setStay(res.data.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const fetchComments = async () => {
+    await axios
+      .get(`${endpoint}/rooms/${stayId}/feedbacks`, {
+        headers: { Authorization: `Bearer ${cookies.session}` },
+      })
+      .then((res) => {
+        setComments(res.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -151,6 +163,7 @@ const DetailStay = () => {
   // Use Effect
   useEffect(() => {
     fetchDetails();
+    fetchComments();
     fetchReservations();
 
     if (dateWarning) {
@@ -317,15 +330,33 @@ const DetailStay = () => {
             Show More
           </button>
 
-          <h2 className='font-semibold text-accent mt-4'>Reviews</h2>
-          <CommentCard
-            id={2}
-            user="Mus"
-            image="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
-            date="2023-10-10"
-            rating={4}
-            comment="Tempatnya lumayan oke sih ini"      
-          />
+          {comments.length == 0 ? <></> : <h2 className='font-semibold text-accent mt-4'>Reviews</h2>}
+          
+
+          <div className='flex flex-col gap-2'>
+            {comments.map((comment: any) => {
+              return (
+                <CommentCard
+                  id={comment.id}
+                  user={comment.user_name}
+                  image={comment.user_profile_picture}
+                  date="2023-10-10"
+                  rating={comment.rating}
+                  comment={comment.feedback}
+                />
+              )
+            })}
+            {/* <CommentCard
+              id={2}
+              user="Mus"
+              image="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+              date="2023-10-10"
+              rating={4}
+              comment="Tempatnya lumayan oke sih ini"
+            /> */}
+          </div>
+
+
 
         </div>
       </div>
